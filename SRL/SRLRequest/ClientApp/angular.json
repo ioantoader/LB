@@ -17,23 +17,22 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "progress": false,
-            "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
             "allowedCommonJsDependencies": [
               "oidc-client"
             ],
             "assets": [
               "src/assets"
             ],
+            "index": "src/index.html",
+            "main": "src/main.ts",
+            "outputPath": "dist",
+            "polyfills": "src/polyfills.ts",
+            "progress": false,
+            "scripts": [],
             "styles": [
-              "node_modules/bootstrap/dist/css/bootstrap.min.css",
-              "src/styles.css"
+              "src/styles.scss"
             ],
-            "scripts": []
+            "tsConfig": "tsconfig.app.json"
           },
           "configurations": {
             "production": {
@@ -117,7 +116,8 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": true
+              "vendorChunk": true,
+              "buildOptimizer": true
             },
             "production": {
               "optimization": true,
@@ -125,14 +125,14 @@
               "sourceMap": false,
               "namedChunks": false,
               "extractLicenses": true,
-              "vendorChunk": false
+              "vendorChunk": false,
+              "buildOptimizer": true
             }
           }
         }
       }
     }
   },
-  "defaultProject": "SRLRequest",
   "cli": {
     "analytics": false
   }
