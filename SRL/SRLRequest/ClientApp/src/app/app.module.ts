@@ -43,8 +43,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     { provide: HTTP_INTERCEPTORS, useClass: AuthorizeInterceptor, multi: true }
   ],
   exports: [
-    BrowserModule,
-    BrowserAnimationsModule,
+    RouterModule
   ],
   bootstrap: [AppComponent]
 })

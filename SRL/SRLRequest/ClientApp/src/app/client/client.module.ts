@@ -5,12 +5,13 @@ import { ClientRoutes } from './client.routing';
 import { RouterModule } from '@angular/router';
 import { AppLayoutModule } from '../layout/app.layout.module';
 import { CLIENT_MENU_PROVIDER } from './service/client.menu.service';
+import { CreateCompanyComponent } from './components/create-company/create-company.component';
 
 @NgModule({
   imports: [
     CommonModule,
     ClientRoutes,
-    AppLayoutModule,
+    AppLayoutModule
   ],
   exports: [
     RouterModule
@@ -18,6 +19,6 @@ import { CLIENT_MENU_PROVIDER } from './service/client.menu.service';
   providers: [
     CLIENT_MENU_PROVIDER
   ],
-  declarations: [ClientLayoutComponent]
+  declarations: [ClientLayoutComponent, CreateCompanyComponent]
 })
 export class ClientModule { }

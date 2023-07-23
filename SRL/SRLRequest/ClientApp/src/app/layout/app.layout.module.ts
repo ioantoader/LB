@@ -42,6 +42,6 @@ import { CommonModule } from '@angular/common';
         RouterModule,
         AppConfigModule
   ],
-  exports: [AppLayoutComponent, AppMenuComponent]
+  exports: [AppLayoutComponent]
 })
 export class AppLayoutModule { }
