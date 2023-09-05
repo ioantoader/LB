@@ -1,0 +1,107 @@
+
+<p-tabView>
+  <p-tabPanel header="Nume">
+    <div class="card">
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input pInputText id="lastName" placeholder="Nume Familie"/>
+          <label htmlFor="lastName">Nume Familie</label>
+        </span>
+      </div>
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input pInputText id="firstName" placeholder="Prenume"/>
+          <label htmlFor="firstName">Prenume</label>
+        </span>
+      </div>
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input pInputText id="phone" placeholder="Telefon"/>
+          <label htmlFor="phone">Telefon</label>
+        </span>
+      </div>
+    </div>
+  </div>
+  </p-tabPanel>
+  <p-tabPanel header="Date buletin">
+
+    <div class="card">
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown id="identityCardType"></p-dropdown>
+            <label htmlFor="identityCardType">Tip act. Identitate</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="series" placeholder="Serie"/>
+            <label htmlFor="series">Serie</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="number" placeholder="Numer"/>
+            <label htmlFor="number">Serie</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="cnp" placeholder="CNP"/>
+            <label htmlFor="cnp">CNP</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="birthcountry" placeholder="Tara Nasterii"/>
+            <label htmlFor="birthcountry">Tara Nasterii</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="birthcounty" placeholder="Judet/Sector nastere"/>
+            <label htmlFor="birthcounty">Judet/Sector nastere</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="birthplace" placeholder="Localitate Nastere"/>
+            <label htmlFor="birthplace">Localitate Nastere</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="citizenship" placeholder="Cetatenie"/>
+            <label htmlFor="citizenship">Cetatenie</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar id="releasedate" appendTo="body"></p-calendar>
+            <label htmlFor="releasedate">Data eliberarii</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar id="expiredate" appendTo="body"></p-calendar>
+            <label htmlFor="expiredate">Data expirarii</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="emitedby" placeholder="Eliberat de"/>
+            <label htmlFor="emitedby">Eliberat de</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar id="birthday" appendTo="body"></p-calendar>
+            <label htmlFor="birthday">Data nasterii</label>
+          </span>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Domiciliu"></p-tabPanel>
+</p-tabView>
