@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { MenuModel } from '../../layout/model/menu.model';
-import { AppMenuItemsService } from '../../layout/service/app.menu.service';
+import { MenuModel } from './../../../layout/model/menu.model';
+import { AppMenuItemsService } from './../../../layout/service/app.menu.service';
 
 @Injectable()
 export class ClientMenuService extends AppMenuItemsService {

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ClientLayoutComponent } from './client.layout.component';
 import { ClientRoutes } from './client.routing';
 import { RouterModule } from '@angular/router';
-import { AppLayoutModule } from '../layout/app.layout.module';
+import { AppLayoutModule } from './../../layout/app.layout.module';
 import { CLIENT_MENU_PROVIDER } from './service/client.menu.service';
 import { CreateCompanyComponent } from './components/create-company/create-company.component';
 

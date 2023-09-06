@@ -36,7 +36,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
       { path: '', component: HomeComponent, pathMatch: 'full' },
       { path: 'counter', component: CounterComponent },
       { path: 'fetch-data', component: FetchDataComponent, canActivate: [AuthorizeGuard] },
-      { path: 'client', loadChildren: ()=> import('./client/client.module').then(m => m.ClientModule)},
+      { path: 'client', loadChildren: ()=> import('./features/client/client.module').then(m => m.ClientModule)},
     ])
   ],
   providers: [

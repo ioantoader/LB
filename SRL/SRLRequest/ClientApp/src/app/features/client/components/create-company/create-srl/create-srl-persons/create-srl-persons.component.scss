@@ -1,0 +1,9 @@
+
+::ng-deep {
+.person-data-dialog {
+  min-height: 650px;
+  @media screen and (min-width: 1200px) {
+    width: 1140px;
+  }
+}
+}

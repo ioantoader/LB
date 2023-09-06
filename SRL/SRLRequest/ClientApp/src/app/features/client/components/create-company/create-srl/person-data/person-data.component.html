@@ -1,0 +1,175 @@
+<form [formGroup]="personDataFormGroup">
+<p-tabView>
+  <p-tabPanel header="Nume">
+    <div class="card">
+    <div class="p-fluid p-formgrid grid">
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input pInputText id="lastName" placeholder="Nume Familie" formControlName="lastName"/>
+          <label htmlFor="lastName">Nume Familie</label>
+        </span>
+      </div>
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input pInputText id="firstName" placeholder="Prenume" formControlName="firstName"/>
+          <label htmlFor="firstName">Prenume</label>
+        </span>
+      </div>
+      <div class="field col-12 md:col-4">
+        <span class="p-float-label">
+          <input pInputText id="phone" placeholder="Telefon" formControlName="phone"/>
+          <label htmlFor="phone">Telefon</label>
+        </span>
+      </div>
+    </div>
+  </div>
+  </p-tabPanel>
+  <p-tabPanel header="Date buletin" formGroupName="identityDocument">
+    <div class="card">
+      <div class="p-fluid p-formgrid grid">
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <p-dropdown id="identityCardType"></p-dropdown>
+            <label htmlFor="identityCardType">Tip act. Identitate</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="serial" placeholder="Serie" formControlName="serial"/>
+            <label htmlFor="serial">Serie</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="number" placeholder="Numer" formControlName="number"/>
+            <label htmlFor="number">Number</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="cnp" placeholder="CNP" formControlName="cnp"/>
+            <label htmlFor="cnp">CNP</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="birthcountry" placeholder="Tara Nasterii" formControlName="birthCountry"/>
+            <label htmlFor="birthcountry">Tara Nasterii</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="birthstate" placeholder="Judet/Sector nastere" formControlName="birthState"/>
+            <label htmlFor="birthstate">Judet/Sector nastere</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="birthcity" placeholder="Localitate Nastere" formControlName="birthCity"/>
+            <label htmlFor="birthcity">Localitate Nastere</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="citizenship" placeholder="Cetatenie" formControlName="citizenship"/>
+            <label htmlFor="citizenship">Cetatenie</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar id="issuedate" appendTo="body" formControlName="issueDate"></p-calendar>
+            <label htmlFor="issuedate">Data eliberarii</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar id="expirationdate" appendTo="body" formControlName="expirationDate"></p-calendar>
+            <label htmlFor="expirationdate">Data expirarii</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="issueby" placeholder="Eliberat de" formControlName="issueBy"/>
+            <label htmlFor="issueby">Eliberat de</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <p-calendar id="birthdate" appendTo="body" formControlName="birthDate"></p-calendar>
+            <label htmlFor="birthdate">Data nasterii</label>
+          </span>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+  <p-tabPanel header="Domiciliu" formGroupName="address">
+    <div class="card">
+      <div class="grid p-formgrid p-fluid">
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="addresscountry" placeholder="Tara" formControlName="country">
+            <label htmlFor="addresscountry">Tara</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="addresstate" placeholder="Judet/Sector" formControlName="state">
+            <label htmlFor="addressstate">Judet/Sector</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-4">
+          <span class="p-float-label">
+            <input pInputText id="addresscity" placeholder="Localitate" formControlName="city">
+            <label htmlFor="addresscity">Localitate</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-8">
+          <span class="p-float-label">
+            <input pInputText id="addressstreet" placeholder="Strada" formControlName="street">
+            <label htmlFor="addressstreet">Strada</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-2">
+          <span class="p-float-label">
+            <input pInputText id="addressnumber" placeholder="Numer" formControlName="number">
+            <label htmlFor="addressnumber">Numer</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-2">
+          <span class="p-float-label">
+            <input pInputText id="addresspostalcode" placeholder="Cod Postal" formControlName="postalCode">
+            <label htmlFor="addresspostalcode">Code postal</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="addressblock" placeholder="Bloc" formControlName="block">
+            <label htmlFor="addressblock">Bloc</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="addressstair" placeholder="Scara" formControlName="stair">
+            <label htmlFor="addressstair">Scara</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="addressfloor" placeholder="Etaj" formControlName="floor">
+            <label htmlFor="addressfloor">Etaj</label>
+          </span>
+        </div>
+        <div class="field col-12 md:col-3">
+          <span class="p-float-label">
+            <input pInputText id="addressapartment" placeholder="Apartament" formControlName="apartment">
+            <label htmlFor="addressapartment">Apartament</label>
+          </span>
+        </div>
+      </div>
+    </div>
+  </p-tabPanel>
+</p-tabView>
+<div class="p-dialog-footer">
+  <button type="button" pButton icon="pi pi-check" label="Salveza" class="p-button-outlined" (click)="$event.stopPropagation();save()" title="Salveata"></button>
+</div>
+</form>
