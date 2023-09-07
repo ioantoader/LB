@@ -19,7 +19,7 @@ export class CreateSrlComponent implements OnInit {
       },
       {
         label: 'Persoanele din firma',
-        routerLink: 'persons'
+        routerLink: 'associates'
       },
       {
         label: 'Sediul Firmei',

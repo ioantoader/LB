@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Optional, SkipSelf } from '@angular/core';
 import { MenuModel } from './../../../layout/model/menu.model';
 import { AppMenuItemsService } from './../../../layout/service/app.menu.service';
 
@@ -38,6 +38,7 @@ export function CLIENT_MENU_PROVIDER_FACTORY(
 export const CLIENT_MENU_PROVIDER = {
 
   provide: AppMenuItemsService,
+  deps: [[new Optional(), new SkipSelf(), ClientMenuService]],
   useFactory: CLIENT_MENU_PROVIDER_FACTORY
 };
 
