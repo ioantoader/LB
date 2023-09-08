@@ -11,7 +11,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
   selector: 'app-create-srl-associates',
   templateUrl: './create-srl-associates.component.html',
   styleUrls: ['./create-srl-associates.component.scss'],
-  providers: [DialogService, ConfirmationService, MessageService]
+  providers: []
 })
 export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 
@@ -64,8 +64,6 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
   }
 
   public deleteAssociate(associate: AssociateGridViewModel): void {
-
-
     this.confirmationService.confirm({
       message: `Sunteti siguri ca doriti sa stergeti asociatul ${associate.fullname}`,
       header: 'Confirm',
@@ -97,7 +95,7 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 
   }
 
-  private async openAssociateDialog(associate: AssociateData): Promise<AssociateData> {
+  private async openAssociateDialog(associate?: AssociateData): Promise<AssociateData> {
     this.dialogRef = this.dialogService.open(AssociateDataComponent, {
       contentStyle: { overflow: 'auto' },
       maximizable: true,

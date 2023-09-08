@@ -1,0 +1,100 @@
+<form [formGroup]="locationFormGroup">
+  <p-tabView>
+    <p-tabPanel header="Adresa" formGroupName="address">
+      <div class="card">
+        <div class="grid p-formgrid p-fluid">
+          <div class="field col-12 md:col-4">
+            <span class="p-float-label">
+              <input pInputText id="addresscountry" placeholder="Tara" formControlName="country">
+              <label htmlFor="addresscountry">Tara</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-4">
+            <span class="p-float-label">
+              <input pInputText id="addresstate" placeholder="Judet/Sector" formControlName="state">
+              <label htmlFor="addressstate">Judet/Sector</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-4">
+            <span class="p-float-label">
+              <input pInputText id="addresscity" placeholder="Localitate" formControlName="city">
+              <label htmlFor="addresscity">Localitate</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-8">
+            <span class="p-float-label">
+              <input pInputText id="addressstreet" placeholder="Strada" formControlName="street">
+              <label htmlFor="addressstreet">Strada</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-2">
+            <span class="p-float-label">
+              <input pInputText id="addressnumber" placeholder="Numer" formControlName="number">
+              <label htmlFor="addressnumber">Numer</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-2">
+            <span class="p-float-label">
+              <input pInputText id="addresspostalcode" placeholder="Cod Postal" formControlName="postalCode">
+              <label htmlFor="addresspostalcode">Code postal</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+              <input pInputText id="addressblock" placeholder="Bloc" formControlName="block">
+              <label htmlFor="addressblock">Bloc</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+              <input pInputText id="addressstair" placeholder="Scara" formControlName="stair">
+              <label htmlFor="addressstair">Scara</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+              <input pInputText id="addressfloor" placeholder="Etaj" formControlName="floor">
+              <label htmlFor="addressfloor">Etaj</label>
+            </span>
+          </div>
+          <div class="field col-12 md:col-3">
+            <span class="p-float-label">
+              <input pInputText id="addressapartment" placeholder="Apartament" formControlName="apartment">
+              <label htmlFor="addressapartment">Apartament</label>
+            </span>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Dovada">
+      <div class="card">
+        <h5>Detalii Contract</h5>
+        <div class="grid p-formgrid p-fluid">
+          <div class="field p-inputgroup col-12 md:col-6">
+            <span class="p-float-label">
+              <input pInputText id="contractduration" placeholder="Durata in ani">
+              <label htmlFor="contractduration">Durata in ani</label>
+            </span>
+            <span class="p-inputgroup-addon">ANI</span>
+          </div>
+        </div>
+        <div class="grid p-formgrid p-fluid">
+          <div class="field col-8 md:col-8">
+            <span class="p-float-label">
+              <input pInputText id="contractmonthlyrental" placeholder="Costul chiriei lunare">
+              <label htmlFor="contractmonthlyrental">Costul chiriei</label>
+            </span>
+          </div>
+          <div class="field col-8 md:col-8">
+            <span class="p-float-label">
+              <input pInputText id="contractrentaldeposit" placeholder="Garantia">
+              <label htmlFor="contractrentaldeposit">Garantia</label>
+            </span>
+          </div>
+        </div>
+      </div>
+    </p-tabPanel>
+    <p-tabPanel header="Proprietari">
+    </p-tabPanel>
+  </p-tabView>
+</form>

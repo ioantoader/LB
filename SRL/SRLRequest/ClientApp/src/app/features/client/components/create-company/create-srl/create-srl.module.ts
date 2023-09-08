@@ -7,6 +7,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { CreateSrlAssociatesComponent } from './create-srl-associates/create-srl-associates.component';
 import { AssociateDataComponent } from './associate-data/associate-data.component';
 import { PrimengModule } from 'src/app/shared/modules/primeng.module';
+import { CreateSrlLocationsComponent } from './create-srl-locations/create-srl-locations.component';
+import { LocationComponent } from './location/location.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -20,7 +22,9 @@ import { PrimengModule } from 'src/app/shared/modules/primeng.module';
     CreateSrlComponent,
     CreateSrlContactComponent,
     CreateSrlAssociatesComponent,
-    AssociateDataComponent
+    AssociateDataComponent,
+    CreateSrlLocationsComponent,
+    LocationComponent,
   ]
 })
 export class CreateSrlModule { }

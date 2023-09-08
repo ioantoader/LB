@@ -1,7 +1,9 @@
-export interface IdentityDocument {
+export interface IdentityDocumentBasic {
   serial:           string;
   number:           string;
   cnp:              string;
+}
+export interface IdentityDocument extends IdentityDocumentBasic{
   birthCountry:     string;
   birthState:       string;
   birthCity:        string;

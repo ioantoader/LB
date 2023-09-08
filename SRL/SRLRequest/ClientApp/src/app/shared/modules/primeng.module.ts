@@ -1,5 +1,5 @@
 
-import { NgModule } from '@angular/core';
+import { ApplicationRef, ComponentFactoryResolver, InjectionToken, Injector, NgModule, Optional, SkipSelf } from '@angular/core';
 import { AccordionModule } from 'primeng/accordion';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { AvatarModule } from 'primeng/avatar';
@@ -23,7 +23,7 @@ import { DividerModule } from 'primeng/divider';
 import { DockModule } from 'primeng/dock';
 import { DragDropModule } from 'primeng/dragdrop';
 import { DropdownModule } from 'primeng/dropdown';
-import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { DialogService, DynamicDialogModule } from 'primeng/dynamicdialog';
 import { EditorModule } from 'primeng/editor';
 import { FieldsetModule } from 'primeng/fieldset';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -85,6 +85,8 @@ import { CardModule } from 'primeng/card';
 import { BlockUIModule } from 'primeng/blockui';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { RippleModule } from 'primeng/ripple';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { DOCUMENT } from '@angular/common';
 const modules = [
   RippleModule,
   AvatarModule,
@@ -161,9 +163,43 @@ const modules = [
   CardModule
 ];
 
+export function CONFIRMATIONSERVICE_PROVIDER_FACTORY(
+  parentAuthService: ConfirmationService) {
+  return parentAuthService || new ConfirmationService();
+}
+
+export const CONFIRMATIONSERVICE_PROVIDER = {
+  provide: ConfirmationService,
+  deps: [[new Optional(), new SkipSelf(), ConfirmationService]],
+  useFactory: CONFIRMATIONSERVICE_PROVIDER_FACTORY
+};
+
+
+export function MESSAGESERVICE_PROVIDER_FACTORY(
+  parentAuthService: MessageService) {
+  return parentAuthService || new MessageService();
+}
+
+export const MESSAGESERVICE_PROVIDER = {
+  provide: MessageService,
+  deps: [[new Optional(), new SkipSelf(), MessageService]],
+  useFactory: MESSAGESERVICE_PROVIDER_FACTORY
+};
+
+export function DIALOGSERVICE_PROVIDER_FACTORY(
+  parentAuthService: DialogService, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, document: Document) {
+  return parentAuthService || new DialogService(componentFactoryResolver,appRef,injector,document);
+}
+
+export const DIALOGSERVICE_PROVIDER = {
+  provide: DialogService,
+  deps: [[new Optional(), new SkipSelf(), DialogService], ComponentFactoryResolver, ApplicationRef, Injector, [DOCUMENT as InjectionToken<Document>]],
+  useFactory: DIALOGSERVICE_PROVIDER_FACTORY
+};
 
 @NgModule({
   imports: modules,
-  exports: modules
+  exports: modules,
+  providers: [CONFIRMATIONSERVICE_PROVIDER, MESSAGESERVICE_PROVIDER, DIALOGSERVICE_PROVIDER]
 })
 export class PrimengModule { }
