@@ -110,6 +110,7 @@ export class LocationComponent implements OnInit, OnDestroy {
 
   public save() {
     var t: CompanyLocation = this.locationFormGroup.value;
+    t.owners = this.locationOwners;
     this.location = t;
     this._dialogRef.close(this.location);
 
