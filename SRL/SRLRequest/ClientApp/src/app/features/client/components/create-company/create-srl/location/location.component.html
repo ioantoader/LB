@@ -66,13 +66,13 @@
         </div>
       </div>
     </p-tabPanel>
-    <p-tabPanel header="Dovada">
+    <p-tabPanel header="Dovada" formGroupName="contract">
       <div class="card">
         <h5>Detalii Contract</h5>
         <div class="grid p-formgrid p-fluid">
           <div class="field p-inputgroup col-12 md:col-6">
             <span class="p-float-label">
-              <input pInputText id="contractduration" placeholder="Durata in ani">
+              <input pInputText id="contractduration" placeholder="Durata in ani" formControlName="durationInYears">
               <label htmlFor="contractduration">Durata in ani</label>
             </span>
             <span class="p-inputgroup-addon">ANI</span>
@@ -81,13 +81,13 @@
         <div class="grid p-formgrid p-fluid">
           <div class="field col-8 md:col-8">
             <span class="p-float-label">
-              <input pInputText id="contractmonthlyrental" placeholder="Costul chiriei lunare">
+              <input pInputText id="contractmonthlyrental" placeholder="Costul chiriei lunare" formControlName="monthlyRental">
               <label htmlFor="contractmonthlyrental">Costul chiriei</label>
             </span>
           </div>
           <div class="field col-8 md:col-8">
             <span class="p-float-label">
-              <input pInputText id="contractrentaldeposit" placeholder="Garantia">
+              <input pInputText id="contractrentaldeposit" placeholder="Garantia" formControlName="rentalDeposit">
               <label htmlFor="contractrentaldeposit">Garantia</label>
             </span>
           </div>
@@ -95,6 +95,31 @@
       </div>
     </p-tabPanel>
     <p-tabPanel header="Proprietari">
+      <div class="card">
+        <div class="flex align-items-center justify-content-between">
+          <h5>Proprietari</h5>
+          <p-button icon="pi pi-plus" label="Adauga Proprietar" styleClass="p-button-outlined" (onClick)="addOwner()"></p-button>
+        </div>
+        <p-dataView [value]="locationOwners">
+          <ng-template let-owner pTemplate="listItem">
+            <div class="col-12">
+            <div class="flex flex-row justify-content-between p-4 gap-4">
+              <div>
+                <span>{{owner.contact.firstName}} {{owner.contact.lastName}}</span>
+              </div>
+              <div>
+                <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" title="Edit" (click)="editOwner(owner)"></button>
+                <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" title="Delete" (click)="deleteOwner(owner)"></button>
+              </div>
+            </div>
+          </div>
+          </ng-template>
+        </p-dataView>
+      </div>
     </p-tabPanel>
   </p-tabView>
+  <div class="p-dialog-footer">
+    <button type="button" pButton icon="pi pi-check" label="Salveaza" class="p-button-outlined"
+      (click)="$event.stopPropagation();save()" title="Salveaza"></button>
+  </div>
 </form>

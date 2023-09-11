@@ -1,16 +1,15 @@
 import { Address } from "./address.model";
-import { IdentityDocumentBasic } from "./Identity-document.model";
+import { PersonData } from "./person-data.model";
 
 export interface CompanyLocationContract {
   durationInYears: number;
   monthlyRental?: number;
   rentalDeposit?: number;
 }
-export interface CompanyLocationOwner {
-  identityDocument: IdentityDocumentBasic;
-}
+
 export interface CompanyLocation {
+  id?: string;
   address: Address;
-  locationContract: CompanyLocationContract;
-  owners: CompanyLocationOwner[];
+  contract: CompanyLocationContract;
+  owners: Partial<PersonData>[];
 }

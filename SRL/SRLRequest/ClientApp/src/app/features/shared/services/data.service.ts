@@ -1,15 +1,15 @@
 import { Injectable, Optional,SkipSelf } from '@angular/core';
-import { AssociateData } from '../models/associate-data.model';
+import { PersonData } from '../models/person-data.model';
 @Injectable()
 export class DataService {
 
   constructor() { }
-  public addAssociate(companyId: string ,associate: AssociateData): Promise<AssociateData> {
+  public addAssociate(companyId: string ,associate: PersonData): Promise<PersonData> {
     associate.id = crypto.randomUUID();
     return Promise.resolve(associate);
   }
 
-  public updateAssociate(associate: AssociateData): Promise<void> {
+  public updateAssociate(associate: PersonData): Promise<void> {
     return Promise.resolve();
   }
 

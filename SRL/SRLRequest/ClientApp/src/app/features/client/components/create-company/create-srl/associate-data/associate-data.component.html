@@ -1,6 +1,6 @@
 <form [formGroup]="associateDataFormGroup">
   <p-tabView>
-    <p-tabPanel header="Nume">
+    <p-tabPanel header="Nume" formGroupName="contact">
       <div class="card">
         <div class="p-fluid p-formgrid grid">
           <div class="field col-12 md:col-4">
@@ -17,7 +17,7 @@
           </div>
           <div class="field col-12 md:col-4">
             <span class="p-float-label">
-              <input pInputText id="phone" placeholder="Telefon" formControlName="phone" />
+              <input pInputText id="phone" placeholder="Telefon" formControlName="phoneNumber" />
               <label htmlFor="phone">Telefon</label>
             </span>
           </div>

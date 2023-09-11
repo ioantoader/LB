@@ -9,6 +9,7 @@ import { AssociateDataComponent } from './associate-data/associate-data.componen
 import { PrimengModule } from 'src/app/shared/modules/primeng.module';
 import { CreateSrlLocationsComponent } from './create-srl-locations/create-srl-locations.component';
 import { LocationComponent } from './location/location.component';
+import { LocationOwnerComponent } from './location/location-owner/location-owner.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -25,6 +26,7 @@ import { LocationComponent } from './location/location.component';
     AssociateDataComponent,
     CreateSrlLocationsComponent,
     LocationComponent,
+    LocationOwnerComponent,
   ]
 })
 export class CreateSrlModule { }

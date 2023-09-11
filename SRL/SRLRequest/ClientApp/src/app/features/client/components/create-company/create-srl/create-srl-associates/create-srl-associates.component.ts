@@ -1,17 +1,18 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { AssociateDataComponent } from '../associate-data/associate-data.component';
-import { AssociateData } from 'src/app/features/shared/models/associate-data.model';
-import { IdentityDocument } from 'src/app/features/shared/models/Identity-document.model';
+import { PersonData } from 'src/app/features/shared/models/person-data.model';
+import { IDCard } from 'src/app/features/shared/models/Identity-document.model';
 import { firstValueFrom } from 'rxjs';
 import { DataService } from 'src/app/features/shared/services/data.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
+import { Contact } from 'src/app/features/shared/models/contact.model';
 
 @Component({
   selector: 'app-create-srl-associates',
   templateUrl: './create-srl-associates.component.html',
   styleUrls: ['./create-srl-associates.component.scss'],
-  providers: []
+  providers: [DialogService]
 })
 export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 
@@ -26,7 +27,7 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 
 
   public async addAssociate() {
-    let id: Partial<IdentityDocument> = {
+    let id: Partial<IDCard> = {
       serial: 'xb',
       number: '12345',
       cnp: '1770477',
@@ -39,11 +40,13 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
       issueBy: 'Politie',
       birthDate: new Date(1977,3,13),
     }
-    let p: Partial<AssociateData> = {
-      firstName: 'Ioan',
-      lastName: 'Toader',
-      phone: '00491739656754',
-      identityDocument: id as IdentityDocument,
+    let p: Partial<PersonData> = {
+      contact: {
+        firstName: 'Ioan',
+        lastName: 'Toader',
+        phoneNumber: '00491739656754',
+      } as Contact,
+      identityDocument: id as IDCard,
       address: {
         city: 'Düsseldorf',
         country: 'Germany',
@@ -55,7 +58,7 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
       }
     };
 
-    let associateData = await this.openAssociateDialog(<AssociateData>p);
+    let associateData = await this.openAssociateDialog(<PersonData>p);
     if(associateData) {
       associateData = await this.dataService.addAssociate('',associateData);
       this.associates.push(new AssociateGridViewModel(associateData));
@@ -75,14 +78,14 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
   private deleteAssociateInternal(associate: AssociateGridViewModel): void {
     const id = associate.underlyingData.id!;
     this.dataService.deleteAssociate(id);
-    this.associates = this.associates.filter(a => a.underlyingData.id !== id);
+    this.associates = this.associates.filter(a => a.underlyingData?.id?.toLowerCase() !== id?.toUpperCase());
   }
 
   public async editAssociate(associate: AssociateGridViewModel): Promise<void> {
     const associateData = await this.openAssociateDialog(associate.underlyingData);
     if(associateData) {
       await this.dataService.updateAssociate(associateData);
-      const idx = this.associates.findIndex(a => a?.underlyingData?.id === associateData.id);
+      const idx = this.associates.findIndex(a => a?.underlyingData?.id?.toUpperCase() === associateData.id?.toUpperCase());
       const associate = new AssociateGridViewModel(associateData)
       if(idx >= 0) {
         this.associates[idx] = associate;
@@ -95,7 +98,7 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 
   }
 
-  private async openAssociateDialog(associate?: AssociateData): Promise<AssociateData> {
+  private async openAssociateDialog(associate?: PersonData): Promise<PersonData> {
     this.dialogRef = this.dialogService.open(AssociateDataComponent, {
       contentStyle: { overflow: 'auto' },
       maximizable: true,
@@ -118,8 +121,8 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 class AssociateGridViewModel {
   public fullname?: string;
   public cnp?: string;
-  constructor(public underlyingData: AssociateData) {
-    this.fullname = `${this.underlyingData?.lastName} ${this.underlyingData?.firstName}`;
+  constructor(public underlyingData: PersonData) {
+    this.fullname = `${this.underlyingData?.contact?.lastName} ${this.underlyingData?.contact?.firstName}`;
     this.cnp = this.underlyingData?.identityDocument?.cnp;
   }
   /*

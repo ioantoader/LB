@@ -1,0 +1,40 @@
+<form class="card" [formGroup]="locationOwnerFormGroup">
+  <div class="grid p-fluid p-formgrid" formGroupName="contact">
+    <div class="field col-12 md:col-6">
+      <span class="p-float-label">
+        <input pInputText id="ownerlastname" placeholder="Nume" formControlName="lastName" tabindex="70000">
+        <label htmlFor="ownerlastname">Nume</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-6">
+      <span class="p-float-label">
+        <input pInputText id="ownerfirstname" placeholder="Prenume" formControlName="firstName" tabindex="70001">
+        <label htmlFor="ownerfirstname">Prenume</label>
+      </span>
+    </div>
+  </div>
+  <div class="grid p-fluid p-formgrid" formGroupName="identityDocument">
+    <div class="field col-12 md:col-3">
+      <span class="p-float-label">
+        <input pInputText id="ownderidentityserial" placeholder="Serie" formControlName="serial">
+        <label htmlFor="ownderidentityserial">Serie</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-3">
+      <span class="p-float-label">
+        <input pInputText id="ownderidentitynumber" placeholder="Numer" formControlName="number">
+        <label htmlFor="ownderidentitynumer">Numer</label>
+      </span>
+    </div>
+    <div class="field col-12 md:col-3">
+      <span class="p-float-label">
+        <input pInputText id="ownderidentitycnp" placeholder="CNP" formControlName="cnp">
+        <label htmlFor="ownderidentitycnp">CNP</label>
+      </span>
+    </div>
+  </div>
+  <div class="p-dialog-footer">
+    <button type="button" pButton icon="pi pi-check" label="Salveaza" class="p-button-outlined"
+      (click)="$event.stopPropagation();save()" title="Salveaza"></button>
+  </div>
+</form>

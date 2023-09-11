@@ -186,6 +186,7 @@ export const MESSAGESERVICE_PROVIDER = {
   useFactory: MESSAGESERVICE_PROVIDER_FACTORY
 };
 
+/*
 export function DIALOGSERVICE_PROVIDER_FACTORY(
   parentAuthService: DialogService, componentFactoryResolver: ComponentFactoryResolver, appRef: ApplicationRef, injector: Injector, document: Document) {
   return parentAuthService || new DialogService(componentFactoryResolver,appRef,injector,document);
@@ -196,10 +197,11 @@ export const DIALOGSERVICE_PROVIDER = {
   deps: [[new Optional(), new SkipSelf(), DialogService], ComponentFactoryResolver, ApplicationRef, Injector, [DOCUMENT as InjectionToken<Document>]],
   useFactory: DIALOGSERVICE_PROVIDER_FACTORY
 };
+*/
 
 @NgModule({
   imports: modules,
   exports: modules,
-  providers: [CONFIRMATIONSERVICE_PROVIDER, MESSAGESERVICE_PROVIDER, DIALOGSERVICE_PROVIDER]
+  providers: [CONFIRMATIONSERVICE_PROVIDER, MESSAGESERVICE_PROVIDER]
 })
 export class PrimengModule { }

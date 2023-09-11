@@ -7,7 +7,8 @@ import { LocationComponent } from '../location/location.component';
 @Component({
   selector: 'app-create-srl-location',
   templateUrl: './create-srl-locations.component.html',
-  styleUrls: ['./create-srl-locations.component.scss']
+  styleUrls: ['./create-srl-locations.component.scss'],
+  providers: [DialogService]
 })
 export class CreateSrlLocationsComponent implements OnInit, OnDestroy {
   dialogRef?: DynamicDialogRef;
@@ -21,10 +22,10 @@ export class CreateSrlLocationsComponent implements OnInit, OnDestroy {
   }
 
   public async addLocation() {
-    let location = await this.openAssociateDialog();
+    let location = await this.openDialog();
   }
 
-  private async openAssociateDialog(location?: CompanyLocation): Promise<CompanyLocation> {
+  private async openDialog(location?: CompanyLocation): Promise<CompanyLocation> {
     this.dialogRef = this._dialogService.open(LocationComponent, {
       contentStyle: { overflow: 'auto' },
       maximizable: true,
@@ -34,6 +35,7 @@ export class CreateSrlLocationsComponent implements OnInit, OnDestroy {
       keepInViewport: true,
       styleClass: "company-location-dialog",
       data: Location,
+      autoZIndex: true,
     });
 
     return await firstValueFrom(this.dialogRef.onClose);
