@@ -3,4 +3,19 @@
     <h5>Sedii</h5>
     <p-button icon="pi pi-plus" label="Adauga sediu" styleClass="p-button-outlined" (onClick)="addLocation()"></p-button>
   </div>
+  <p-dataView [value]="locations">
+    <ng-template let-location pTemplate="listItem">
+      <div class="col-12">
+        <div class="flex flex-row justify-content-between p-4 gap-4">
+          <div>
+            <span>{{location.address?.street}} {{location.address?.number}}, {{location.address?.city}}, {{location.address?.postalCode}}, {{location.address?.country}}</span>
+          </div>
+          <div>
+            <button type="button" pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success mr-2" title="Edit" (click)="editLoaction(location)"></button>
+            <button type="button" pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" title="Delete" (click)="deleteLocation(location)"></button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-dataView>
 </div>

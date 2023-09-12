@@ -1,17 +1,19 @@
-<div class="card p-fluid">
-  <h5>Date de contact</h5>
+<form [formGroup]="contactFormGroup">
+  <div class="card p-fluid">
+    <h5>Date de contact</h5>
 
-  <div class="field col-12">
-    <span class="p-float-label">
-      <input pInputText id="telefonnumber" placeholder="Numar de telefon"/>
-      <label htmlFor="telefonnumber">Numar de telefon</label>
-    </span>
-  </div>
+    <div class="field col-12">
+      <span class="p-float-label">
+        <input pInputText id="phonenumber" placeholder="Numar de telefon" formControlName="phoneNumber"/>
+        <label htmlFor="phonenumber">Numar de telefon</label>
+      </span>
+    </div>
 
-  <div class="field col-12">
-    <span class="p-float-label">
-      <input pInputText id="email" placeholder="Adresa de mail"/>
-      <label htmlFor="email">Adresa de mail</label>
-    </span>
+    <div class="field col-12">
+      <span class="p-float-label">
+        <input pInputText id="email" placeholder="Adresa de mail" formControlName="email"/>
+        <label htmlFor="email">Adresa de mail</label>
+      </span>
+    </div>
   </div>
-</div>
+</form>

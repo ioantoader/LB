@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-
+import { Company } from './../../../../shared/models/company.model';
+import { AuthorizeService } from '../../../../../../api-authorization/authorize.service';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 @Component({
   selector: 'app-create-srl',
   templateUrl: './create-srl.component.html',
@@ -8,10 +10,12 @@ import { MenuItem } from 'primeng/api';
 })
 export class CreateSrlComponent implements OnInit {
 
+  company?: Company;
   public items: MenuItem[] = [];
-  constructor() { }
+  constructor(private _auth: AuthorizeService) {    
+  }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.items = [
       {
         label: 'Date de contact',
@@ -34,6 +38,8 @@ export class CreateSrlComponent implements OnInit {
         routerLink: 'names'
       }
     ];
+    const u = await firstValueFrom(this._auth.getUser());
+    console.error(u);
   }
 
 }

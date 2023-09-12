@@ -91,7 +91,7 @@ export class LocationComponent implements OnInit, OnDestroy {
   }
 
 
-  private async openLocationOwnerDialog(locationOwner?: Partial<PersonData>): Promise<Partial<PersonData>> {
+  private async openLocationOwnerDialog(locationOwner?: Partial<PersonData>): Promise<Partial<PersonData | null | undefined>> {
     this.childDialogRef = this._dialogService.open(LocationOwnerComponent, {
       contentStyle: { overflow: 'auto' },
       maximizable: true,

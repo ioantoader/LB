@@ -10,8 +10,8 @@ import { CreateSrlNamesComponent } from './create-srl-names/create-srl-names.com
 
 
 const routes: Routes = [
-  {
-    path: '',component: CreateSrlComponent,
+    {
+      path: '',component: CreateSrlComponent,
       children: [
         {path: '', redirectTo: 'contact', pathMatch: 'full'},
         {path: 'contact', component: CreateSrlContactComponent},

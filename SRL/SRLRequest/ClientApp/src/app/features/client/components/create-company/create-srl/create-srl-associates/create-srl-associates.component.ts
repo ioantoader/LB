@@ -98,7 +98,7 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
 
   }
 
-  private async openAssociateDialog(associate?: PersonData): Promise<PersonData> {
+  private async openAssociateDialog(associate?: PersonData): Promise<PersonData | null | undefined> {
     this.dialogRef = this.dialogService.open(AssociateDataComponent, {
       contentStyle: { overflow: 'auto' },
       maximizable: true,
