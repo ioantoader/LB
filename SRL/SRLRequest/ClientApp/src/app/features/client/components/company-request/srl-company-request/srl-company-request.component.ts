@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
-import { Company } from './../../../../shared/models/company.model';
+import { CompanyRequest } from '../../../../shared/models/company-request.model';
 import { AuthorizeService } from '../../../../../../api-authorization/authorize.service';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { CompanyRequestService } from '../../../../shared/models/company-request.service';
 @Component({
-  selector: 'app-create-srl',
-  templateUrl: './create-srl.component.html',
-  styleUrls: ['./create-srl.component.scss']
+  selector: 'app-srl-company-request',
+  templateUrl: './srl-company-request.component.html',
+  styleUrls: ['./srl-company-request.component.scss'],
+  providers: [CompanyRequestService]
 })
-export class CreateSrlComponent implements OnInit {
+export class SRLCompanyRequestComponent implements OnInit {
 
-  company?: Company;
+  company?: CompanyRequest;
   public items: MenuItem[] = [];
   constructor(private _auth: AuthorizeService) {    
   }

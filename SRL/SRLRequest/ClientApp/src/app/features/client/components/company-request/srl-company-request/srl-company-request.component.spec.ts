@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { CreateSrlActivitiesComponent } from './create-srl-activities.component';
+import { SRLCompanyRequestComponent } from './srl-company-request.component';
 
-describe('CreateSrlActivitiesComponent', () => {
-  let component: CreateSrlActivitiesComponent;
-  let fixture: ComponentFixture<CreateSrlActivitiesComponent>;
+describe('SRLCompanyRequestComponent', () => {
+  let component: SRLCompanyRequestComponent;
+  let fixture: ComponentFixture<SRLCompanyRequestComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateSrlActivitiesComponent ]
+      declarations: [SRLCompanyRequestComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateSrlActivitiesComponent);
+    fixture = TestBed.createComponent(SRLCompanyRequestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

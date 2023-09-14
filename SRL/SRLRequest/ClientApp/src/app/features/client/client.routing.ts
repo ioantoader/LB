@@ -1,8 +1,8 @@
 import { Routes, RouterModule } from '@angular/router';
 import { ClientLayoutComponent } from './client.layout.component';
 import { RequestsComponent } from './components/requests/requests.component';
-import { CreateCompanyComponent } from './components/create-company/create-company.component';
 import { AuthorizeGuard } from '../../../api-authorization/authorize.guard';
+import { CompanyRequestComponent } from './components/company-request/company-request.component';
 
 const routes: Routes = [
   {
@@ -15,14 +15,13 @@ const routes: Routes = [
         path: 'requests', component: RequestsComponent
       },
       {
-        path: 'request', component: CreateCompanyComponent
+        path: 'request', component: CompanyRequestComponent
       },
       {
-        //path: 'requests/srl/create', loadChildren: () => import('./components/create-company/create-srl/create-srl.module').then(m => m.CreateSrlModule)
         path: 'requests/srl/create', redirectTo: `requests/srl/${crypto.randomUUID()}`
       },
       {
-        path: 'requests/srl/:companyId', loadChildren: () => import('./components/create-company/create-srl/create-srl.module').then(m => m.CreateSrlModule),
+        path: 'requests/srl/:companyId', loadChildren: () => import('./components/company-request/srl-company-request/srl-company-request.module').then(m => m.SRLCompanyRequestModule),
         canActivate: [AuthorizeGuard]
 
       }

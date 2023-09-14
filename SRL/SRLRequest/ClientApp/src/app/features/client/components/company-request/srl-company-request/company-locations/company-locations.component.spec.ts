@@ -2,22 +2,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { CompanyContactComponent } from '../company-contact/company-contact.component';
 
-import { CreateSrlContactComponent } from './create-srl-contact.component';
 
-describe('CreateSrlContactComponent', () => {
-  let component: CreateSrlContactComponent;
-  let fixture: ComponentFixture<CreateSrlContactComponent>;
+describe('CompanyContactComponent', () => {
+  let component: CompanyContactComponent;
+  let fixture: ComponentFixture<CompanyContactComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CreateSrlContactComponent ]
+      declarations: [CompanyContactComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CreateSrlContactComponent);
+    fixture = TestBed.createComponent(CompanyContactComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

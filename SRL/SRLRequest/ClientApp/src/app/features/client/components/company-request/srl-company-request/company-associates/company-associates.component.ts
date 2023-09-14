@@ -1,20 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
-import { AssociateDataComponent } from '../associate-data/associate-data.component';
 import { PersonData } from 'src/app/features/shared/models/person-data.model';
 import { IDCard } from 'src/app/features/shared/models/Identity-document.model';
 import { firstValueFrom } from 'rxjs';
 import { DataService } from 'src/app/features/shared/services/data.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Contact } from 'src/app/features/shared/models/contact.model';
+import { CompanyAssociateComponent } from '../company-associate/company-associate.component';
 
 @Component({
-  selector: 'app-create-srl-associates',
-  templateUrl: './create-srl-associates.component.html',
-  styleUrls: ['./create-srl-associates.component.scss'],
+  selector: 'app-company-associates',
+  templateUrl: './company-associates.component.html',
+  styleUrls: ['./company-associates.component.scss'],
   providers: [DialogService]
 })
-export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
+export class CompanyAssociatesComponent implements OnInit, OnDestroy {
 
   private dialogRef?: DynamicDialogRef;
   public associates: AssociateGridViewModel[] = [];
@@ -99,7 +99,7 @@ export class CreateSrlAssociatesComponent implements OnInit, OnDestroy {
   }
 
   private async openAssociateDialog(associate?: PersonData): Promise<PersonData | null | undefined> {
-    this.dialogRef = this.dialogService.open(AssociateDataComponent, {
+    this.dialogRef = this.dialogService.open(CompanyAssociateComponent, {
       contentStyle: { overflow: 'auto' },
       maximizable: true,
       draggable: true,

@@ -5,9 +5,9 @@ import { ClientRoutes } from './client.routing';
 import { RouterModule } from '@angular/router';
 import { AppLayoutModule } from './../../layout/app.layout.module';
 import { CLIENT_MENU_PROVIDER } from './service/client.menu.service';
-import { CreateCompanyComponent } from './components/create-company/create-company.component';
 import { DATA_PROVIDER } from '../shared/services/data.service';
 import { PrimengModule } from 'src/app/shared/modules/primeng.module';
+import { CompanyRequestComponent } from './components/company-request/company-request.component';
 
 @NgModule({
   imports: [
@@ -23,6 +23,6 @@ import { PrimengModule } from 'src/app/shared/modules/primeng.module';
     CLIENT_MENU_PROVIDER,
     DATA_PROVIDER
   ],
-  declarations: [ClientLayoutComponent, CreateCompanyComponent]
+  declarations: [ClientLayoutComponent, CompanyRequestComponent]
 })
 export class ClientModule { }

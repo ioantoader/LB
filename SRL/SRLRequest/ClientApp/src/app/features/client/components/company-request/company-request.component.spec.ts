@@ -2,22 +2,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
+import { CompanyRequestComponent } from './company-request.component';
 
-import { AssociateDataComponent } from './associate-data.component';
 
-describe('AssociateDataComponent', () => {
-  let component: AssociateDataComponent;
-  let fixture: ComponentFixture<AssociateDataComponent>;
+describe('CompanyRequestComponent', () => {
+  let component: CompanyRequestComponent;
+  let fixture: ComponentFixture<CompanyRequestComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AssociateDataComponent ]
+      declarations: [CompanyRequestComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AssociateDataComponent);
+    fixture = TestBed.createComponent(CompanyRequestComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

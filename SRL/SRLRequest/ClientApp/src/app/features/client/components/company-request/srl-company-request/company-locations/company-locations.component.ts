@@ -6,12 +6,12 @@ import { LocationComponent } from '../location/location.component';
 import { ConfirmationService } from 'primeng/api';
 
 @Component({
-  selector: 'app-create-srl-location',
-  templateUrl: './create-srl-locations.component.html',
-  styleUrls: ['./create-srl-locations.component.scss'],
+  selector: 'app-company-locations',
+  templateUrl: './company-locations.component.html',
+  styleUrls: ['./company-locations.component.scss'],
   providers: [DialogService]
 })
-export class CreateSrlLocationsComponent implements OnInit, OnDestroy {
+export class CompanyLocationsComponent implements OnInit, OnDestroy {
 
   dialogRef?: DynamicDialogRef;
   public locations: CompanyLocation[] = [];

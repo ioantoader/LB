@@ -4,11 +4,11 @@ import { DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PersonData } from 'src/app/features/shared/models/person-data.model';
 
 @Component({
-  selector: 'app-associate-data',
-  templateUrl: './Associate-data.component.html',
-  styleUrls: ['./Associate-data.component.scss']
+  selector: 'app-company-associate',
+  templateUrl: './company-associate.component.html',
+  styleUrls: ['./company-associate.component.scss']
 })
-export class AssociateDataComponent implements OnInit {
+export class CompanyAssociateComponent implements OnInit {
   private _associateData?: PersonData
   public  associateDataFormGroup: FormGroup;
   constructor(private _dialogRef: DynamicDialogRef, private _config: DynamicDialogConfig,  fb: FormBuilder) {
