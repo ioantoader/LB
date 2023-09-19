@@ -1,6 +1,6 @@
 ﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace SRLRequest.Models
+namespace IT.DigitalCompany.Models
 {
     public enum PersonType
     {

@@ -12,4 +12,7 @@ export class CompanyRequestComponent implements OnInit {
   ngOnInit() {
   }
 
+  public createSRLRegistrationRequest() {
+
+  }
 }

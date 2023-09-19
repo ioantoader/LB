@@ -1,12 +1,12 @@
-﻿namespace SRLRequest.Models
+﻿namespace IT.DigitalCompany.Models
 {
     public class Address
     {
-        public String Country { get; set; }
-        public String City { get; set; }
-        public String PostalCode { get; set; }
-        public String Number { get; set; }
-        public String Street { get; set; }
+        public String Country { get; set; } = null!;
+        public String City { get; set; } = null!;
+        public String PostalCode { get; set; } = null!;
+        public String Number { get; set; } = null!;
+        public String Street { get; set; } = null!;
         public String? State {  get; set; }
         public String? Block { get; set; }
         public String? Stair { get; set; }

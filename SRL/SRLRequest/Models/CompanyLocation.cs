@@ -1,4 +1,4 @@
-﻿namespace SRLRequest.Models
+﻿namespace IT.DigitalCompany.Models
 {
     public class CompanyLocationContract
     {
@@ -16,5 +16,11 @@
 
         public ICollection<Person> Owners { get; set; } = new List<Person>();
 
+    }
+
+    public class CompanyLocationOwners
+    {
+        public Guid CompanyLocationId { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }

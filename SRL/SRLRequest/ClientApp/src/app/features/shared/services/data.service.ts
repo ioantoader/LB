@@ -6,21 +6,24 @@ import { firstValueFrom } from 'rxjs';
 import { Contact } from '../models/contact.model';
 @Injectable()
 export class DataService {
-
+  private baseUrl: string = '';
   constructor(private _httpClient: HttpClient) {
   }
-  public addAssociate(companyId: string ,associate: PersonData): Promise<PersonData> {
-    associate.id = crypto.randomUUID();
-    return Promise.resolve(associate);
+  public addAssociate(companyId: string, associate: PersonData): Promise<CompanyRequest> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${companyId}/associates`;
+    return firstValueFrom(this._httpClient.post<CompanyRequest>(uri, associate));
   }
 
-  public updateAssociate(associate: PersonData): Promise<void> {
-    return Promise.resolve();
+  public updateAssociate(associate: PersonData): Promise<CompanyRequest> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/associates`;
+    return firstValueFrom(this._httpClient.put<CompanyRequest>(uri, associate));
+
   }
 
-  public deleteAssociate(associateId: string): Promise<void> {
+  public async deleteAssociate(associateId: string): Promise<void> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/associates/${associateId}`;
 
-    return Promise.resolve();
+    await firstValueFrom(this._httpClient.delete(uri));
   }
 
   /*
@@ -32,10 +35,13 @@ export class DataService {
   */
 
   public updateContact(requestId: string, contact: Contact): Promise<CompanyRequest> {
-    const uri = `/api/CompanyRequest/${requestId}/contact`;
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${requestId}/contact`;
 
     return firstValueFrom(this._httpClient.put<CompanyRequest>(uri, contact));
   }
+
+
+  
 }
 
 

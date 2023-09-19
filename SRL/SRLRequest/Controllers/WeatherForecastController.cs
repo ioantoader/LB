@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace SRLRequest.Controllers
+namespace IT.DigitalCompany.Controllers
 {
     [Authorize]
     [ApiController]

@@ -60,7 +60,7 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
 
     let associateData = await this.openAssociateDialog(<PersonData>p);
     if(associateData) {
-      associateData = await this.dataService.addAssociate('',associateData);
+      const cr = await this.dataService.addAssociate('',associateData);
       this.associates.push(new AssociateGridViewModel(associateData));
       this.associates = [...this.associates];
     }

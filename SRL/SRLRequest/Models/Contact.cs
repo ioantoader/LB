@@ -1,4 +1,4 @@
-﻿namespace SRLRequest.Models
+﻿namespace IT.DigitalCompany.Models
 {
     public class Contact
     {

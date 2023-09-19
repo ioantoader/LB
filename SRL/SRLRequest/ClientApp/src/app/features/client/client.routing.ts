@@ -17,9 +17,9 @@ const routes: Routes = [
       {
         path: 'request', component: CompanyRequestComponent
       },
-      {
+      /*{
         path: 'requests/srl/create', redirectTo: `requests/srl/${crypto.randomUUID()}`
-      },
+      },*/
       {
         path: 'requests/srl/:companyId', loadChildren: () => import('./components/company-request/srl-company-request/srl-company-request.module').then(m => m.SRLCompanyRequestModule),
         canActivate: [AuthorizeGuard]

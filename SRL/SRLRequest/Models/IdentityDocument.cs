@@ -1,4 +1,4 @@
-﻿namespace SRLRequest.Models
+﻿namespace IT.DigitalCompany.Models
 {
     public enum IdentityDocumentType
     {
@@ -18,6 +18,6 @@
         public DateTimeOffset? IssueDate { get; set; }
         public DateTimeOffset? ExpirationDate { get; set; }
         public String? IssueBy { get; set; }
-        public DateTimeOffset BirthDate { get; set; }
+        public DateTimeOffset? BirthDate { get; set; }
     }
 }

@@ -14,7 +14,8 @@ const PROXY_CONFIG = [
       "/ApplyDatabaseMigrations",
       "/_framework",
       "/api",
-      "/swagger"
+      "/swagger",
+      "/Test"
    ],
     proxyTimeout: 10000,
     target: target,

@@ -1,4 +1,4 @@
-namespace SRLRequest
+namespace IT.DigitalCompany
 {
     public class WeatherForecast
     {
