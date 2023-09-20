@@ -14,9 +14,16 @@ namespace IT.DigitalCompany.Extensions
             };
         }
 
-        internal static String? GetEmail(ClaimsPrincipal principal)
+        internal static String? GetEmail(this ClaimsPrincipal principal)
         {
-            return principal?.FindFirstValue(JwtClaimTypes.Email);
+            var i = principal.IsInRole("abc");
+            var email = principal?.FindFirstValue(JwtClaimTypes.Email);
+            if(String.IsNullOrWhiteSpace(email))
+            {
+                email = principal?.FindFirstValue(ClaimTypes.Email);
+            }
+            return email;            
+
         }
 
     }

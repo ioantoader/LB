@@ -4,6 +4,8 @@ import { firstValueFrom } from 'rxjs';
 import { CompanyLocation } from 'src/app/features/shared/models/company-location.model';
 import { LocationComponent } from '../location/location.component';
 import { ConfirmationService } from 'primeng/api';
+import { CompanyRequestService } from '../../../../../shared/models/company-request.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-company-locations',
@@ -15,7 +17,12 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
 
   dialogRef?: DynamicDialogRef;
   public locations: CompanyLocation[] = [];
-  constructor(private _dialogService: DialogService, private confirmationService: ConfirmationService) { }
+  constructor(private _companyRequestService: CompanyRequestService,
+              private _dialogService: DialogService,
+              private _confirmationService: ConfirmationService,
+              private _router: Router,
+              private _route: ActivatedRoute
+            ) { }
 
   ngOnDestroy(): void {
     this.dialogRef?.close();
@@ -45,7 +52,7 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
   }
 
   public async deleteLocation(location: CompanyLocation) {
-    this.confirmationService.confirm({
+    this._confirmationService.confirm({
       message: `Sunteti siguri ca doriti sa stergeti locatia?`,
       header: 'Confirm',
       icon: 'pi pi-exclamation-triangle',
@@ -74,4 +81,11 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
 
   }
 
+  public prevPage() {
+    this._companyRequestService.gotoCompanyAssociates(this._router, this._route);
+  }
+
+  public nextPage() {
+
+  }
 }

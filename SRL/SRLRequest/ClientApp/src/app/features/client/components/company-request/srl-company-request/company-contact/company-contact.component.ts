@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CompanyRequestService } from '../../../../../shared/models/company-request.service';
 import { Contact } from '../../../../../shared/models/contact.model';
 import { CompanyRequest } from '../../../../../shared/models/company-request.model';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-company-contact',
@@ -12,7 +13,10 @@ import { CompanyRequest } from '../../../../../shared/models/company-request.mod
 export class CompanyContactComponent implements OnInit, OnDestroy {
 
   public contactFormGroup!: FormGroup;
-  constructor(fb: FormBuilder, private _companyRequestService: CompanyRequestService) {
+  constructor(fb: FormBuilder,
+    private _companyRequestService: CompanyRequestService,
+    private _router: Router,
+    private _route: ActivatedRoute) {
     const c = _companyRequestService.companyRequest?.contact;
     this.contactFormGroup = fb.group({
       'phoneNumber': [c?.phoneNumber],
@@ -33,4 +37,8 @@ export class CompanyContactComponent implements OnInit, OnDestroy {
     await this._companyRequestService.updateContact(c);
   }
 
+  public async nextPage() {
+    await this.save();
+    this._companyRequestService.gotoCompanyAssociates(this._router, this._route);
+  }
 }

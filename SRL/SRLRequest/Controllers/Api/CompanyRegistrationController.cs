@@ -4,6 +4,10 @@ using IT.DigitalCompany.Models;
 using System.Collections.ObjectModel;
 using IT.DigitalCompany.Infrastructure;
 using System.ComponentModel.DataAnnotations;
+using Duende.IdentityServer.Extensions;
+using IT.DigitalCompany.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 
 namespace IT.DigitalCompany.Controllers.Api
 {
@@ -64,6 +68,7 @@ namespace IT.DigitalCompany.Controllers.Api
         }
 
         [HttpPost("requests")]
+        [Authorize()]
         public ActionResult<CompanyRegistrationRequest> Post([FromBody] CompanyRegistrationRequest? request = null)
         {
             request ??= new CompanyRegistrationRequest();
@@ -71,7 +76,7 @@ namespace IT.DigitalCompany.Controllers.Api
             if(String.IsNullOrWhiteSpace(email))
             {
                 var contact = request.Contact ??= new Contact();
-                contact.Email = email;
+                contact.Email = this.User.GetEmail();
             }
             
             return request;

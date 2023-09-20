@@ -40,7 +40,10 @@ export class DataService {
     return firstValueFrom(this._httpClient.put<CompanyRequest>(uri, contact));
   }
 
-
+  public createCompanyRegistrationRequest(): Promise<CompanyRequest> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests`;
+    return firstValueFrom(this._httpClient.post<CompanyRequest>(uri, null));
+  }
   
 }
 

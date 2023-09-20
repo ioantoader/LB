@@ -8,6 +8,9 @@ using IT.DigitalCompany.Models;
 using IT.DigitalCompany.Infrastructure;
 using System.Collections.ObjectModel;
 using IT.DigitalCompany.Extensions;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using IdentityModel;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,7 +31,7 @@ builder.Services.AddIdentityServer(options =>
 {    
 })
     .AddApiAuthorization<ApplicationUser, AppIdentityDbContext>(options =>
-    {
+    {           
         var clients = options.Clients;
         foreach(var c in clients)
         {
@@ -57,6 +60,20 @@ builder.Services.AddScoped<CompanyRegistrationManager>();
 
 builder.Services.AddAuthentication()
     .AddIdentityServerJwt();
+builder.Services.Configure<JwtBearerOptions>(options =>
+{
+    options.TokenValidationParameters.NameClaimType = JwtClaimTypes.Name;
+    options.TokenValidationParameters.RoleClaimType = JwtClaimTypes.Role;
+});
+
+builder.Services.Configure<JwtBearerOptions>(IdentityServerJwtConstants.IdentityServerJwtBearerScheme, 
+    options =>
+{
+    options.MapInboundClaims = false;
+    options.ClaimsIssuer = JwtClaimTypes.Issuer;
+    options.TokenValidationParameters.NameClaimType = JwtClaimTypes.Name;
+    options.TokenValidationParameters.RoleClaimType = JwtClaimTypes.Role;
+});
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();

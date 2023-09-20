@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { MenuItem } from 'primeng/api';
 import { CompanyRequest } from '../../../../shared/models/company-request.model';
 import { AuthorizeService } from '../../../../../../api-authorization/authorize.service';
-import { firstValueFrom, lastValueFrom } from 'rxjs';
+import { filter, firstValueFrom, take} from 'rxjs';
 import { CompanyRequestService } from '../../../../shared/models/company-request.service';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 @Component({
   selector: 'app-srl-company-request',
   templateUrl: './srl-company-request.component.html',
@@ -11,37 +12,45 @@ import { CompanyRequestService } from '../../../../shared/models/company-request
   providers: [CompanyRequestService]
 })
 export class SRLCompanyRequestComponent implements OnInit {
-
-  company?: CompanyRequest;
+  
   public items: MenuItem[] = [];
-  constructor(private _auth: AuthorizeService) {    
+  constructor(private _companyRegisterRequestService: CompanyRequestService,
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _auth: AuthorizeService) {
+    this.items = _companyRegisterRequestService.steps;
+    this.loadCompanyRegistrationRequest();
   }
 
-  async ngOnInit() {
-    this.items = [
-      {
-        label: 'Date de contact',
-        routerLink: 'contact'
-      },
-      {
-        label: 'Persoanele din firma',
-        routerLink: 'associates'
-      },
-      {
-        label: 'Sediul Firmei',
-        routerLink: 'location'
-      },
-      {
-        label: 'Activitati autorizate',
-        routerLink: 'activities'
-      },
-      {
-        label: 'Denumirea Firmei',
-        routerLink: 'names'
-      }
-    ];
-    const u = await firstValueFrom(this._auth.getUser());
-    console.error(u);
+  async ngOnInit() {    
+    const u = await firstValueFrom(this._auth.getUser());    
   }
 
+  private async loadCompanyRegistrationRequest() {    
+    const requestId = this._route.snapshot.paramMap.get('companyId');
+    var p = new Promise<CompanyRequest | undefined | null>((resolve, reject) => {
+      this._router.events
+        .pipe(
+          filter((event) => event instanceof NavigationEnd)
+          , take(1)
+        ).subscribe({ next: e => {
+          const s = this._router.getCurrentNavigation()?.extras?.state;
+          let cr: CompanyRequest | undefined | null = undefined;
+          if (s) {
+            cr = s[requestId!];
+          }
+          resolve(cr);                    
+        },
+          error: err => reject(err)          
+        });
+
+    })    
+    let request = await p;
+    if (!request) {
+      request = {};
+    }
+
+    this._companyRegisterRequestService.companyRequest = request;
+    
+  }
 }

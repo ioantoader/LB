@@ -6,7 +6,7 @@ import { CompanyRequestComponent } from './components/company-request/company-re
 
 const routes: Routes = [
   {
-    path: '', component: ClientLayoutComponent,
+    path: '', component: ClientLayoutComponent, canActivate: [AuthorizeGuard],
     children: [
       {
         path: '', redirectTo: 'requests', pathMatch: 'full'
