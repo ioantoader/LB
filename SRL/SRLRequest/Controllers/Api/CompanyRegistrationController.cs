@@ -21,40 +21,84 @@ namespace IT.DigitalCompany.Controllers.Api
             _companyRegistrationManager = companyRegistrationManager ?? throw new ArgumentNullException(nameof(companyRegistrationManager));
         }
         [HttpPut("requests/{companyRequestId}/contact")]
-        public ActionResult<CompanyRegistrationRequest> PutContact([FromRoute] Guid companyRequestId,
+        public async Task<ActionResult<CompanyRegistrationRequest>> PutContact([FromRoute] Guid companyRequestId,
             Contact contact)
         {
-            var request = new CompanyRegistrationRequest();
-            request.Contact = contact;
+            if(!ModelState.IsValid) 
+            {
+                return BadRequest(ModelState);
+            }
 
-            return request;
+            var registationRequest = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId)
+                .ConfigureAwait(false);
+            if (null == registationRequest)
+            {
+                return NotFound();
+            }
+
+            if(!String.Equals(registationRequest.UserId,User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+            {
+                return Forbid();
+            }
+
+            await this._companyRegistrationManager.UpdateRegistrationRequestContactAsync(registationRequest, contact)
+                .ConfigureAwait(false);
+            return registationRequest;
         }
 
         [HttpPost("requests/{companyRequestId}/associates")]
-        public ActionResult<CompanyRegistrationRequest> PostAssociate([FromRoute] Guid companyRequestId,
+        public async Task<ActionResult<Person>> PostAssociate([FromRoute] Guid companyRequestId,
             [FromBody] Person person)
         {
-            var request = new CompanyRegistrationRequest();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var r = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId)
+                .ConfigureAwait(false);
 
-            var col = request.Associates ??= new Collection<Person>();
-            col.Add(person);
-            person.Id = Guid.NewGuid();
-            return request;
+            if (null == r)
+                return NotFound();
+            if (!String.Equals(r.UserId, User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+
+            await this._companyRegistrationManager
+                .AddRegistrationRequestAssociateAsync(r,person)
+                .ConfigureAwait(false);
+
+            return person;
         }
 
         [HttpPost("requests/associates")]
-        public ActionResult<CompanyRegistrationRequest> PutAssociate([FromBody] Person person)
+        public async Task<ActionResult<Person>> PutAssociate([FromBody] Person person)
         {
-            var request = new CompanyRegistrationRequest();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
 
-            var col = request.Associates ??= new Collection<Person>();
-            col.Add(person);            
-            return request;
+            var r = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(
+                r => r.Associates.Any(a => a.Id.Equals(person.Id)))
+                .ConfigureAwait(false);
+            if (null == r)
+                return NotFound();
+            if (!String.Equals(r.UserId, this.User.GetSubjectId(),StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+            await this._companyRegistrationManager.UpdateRegistrationRequestAssociateAsync(person)
+                .ConfigureAwait(false);
+
+            return person;
         }
+
 
         [HttpDelete("requests/associates/{id}")]
         public ActionResult<CompanyRegistrationRequest> DeleteAssociate([FromRoute]Guid id)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             var request = new CompanyRegistrationRequest();
 
             var col = request.Associates ??= new Collection<Person>();            
@@ -64,21 +108,45 @@ namespace IT.DigitalCompany.Controllers.Api
         [HttpGet("requests")]
         public ActionResult<IEnumerable<CompanyRegistrationRequest>> Get()
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             return new ActionResult<IEnumerable<CompanyRegistrationRequest>>(Enumerable.Empty<CompanyRegistrationRequest>());
         }
 
         [HttpPost("requests")]
         [Authorize()]
-        public ActionResult<CompanyRegistrationRequest> Post([FromBody] CompanyRegistrationRequest? request = null)
+        public async Task<ActionResult<CompanyRegistrationRequest>> Post([FromBody] CompanyRegistrationRequest? request = null)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             request ??= new CompanyRegistrationRequest();
+
+            var userId = request.UserId;
+            if(String.IsNullOrWhiteSpace(userId))
+            {
+                userId = request.UserId = this.User.GetSubjectId();
+            }
+            if(!String.Equals(userId,request.UserId,StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError(nameof(request.UserId), "UserId is not equal with SubjetId");
+                return BadRequest(ModelState);
+            }
             var email = request.Contact?.Email;            
             if(String.IsNullOrWhiteSpace(email))
             {
                 var contact = request.Contact ??= new Contact();
                 contact.Email = this.User.GetEmail();
             }
-            
+
+            await this._companyRegistrationManager.CreateRegistrationRequestAsync(request)
+                .ConfigureAwait(false);
+
             return request;
         }
 

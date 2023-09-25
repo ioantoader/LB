@@ -12,6 +12,30 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "CompanyLocations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address_State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address_Block = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address_Stair = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address_Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Address_Apartment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CompanyLocationContract_DurationInYears = table.Column<int>(type: "int", nullable: false),
+                    CompanyLocationContract_MonthlyRental = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    CompanyLocationContract_RentalDeposit = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyLocations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CompanyRegistrationRequests",
                 columns: table => new
                 {
@@ -28,7 +52,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 });
 
             migrationBuilder.CreateTable(
-                name: "Person",
+                name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -63,59 +87,29 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Person", x => x.Id);
+                    table.PrimaryKey("PK_Persons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
-                name: "CompanyLocation",
+                name: "CompanyRegistrationRequestLocations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_State = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Block = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Stair = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Apartment = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyLocationContract_DurationInYears = table.Column<int>(type: "int", nullable: false),
-                    CompanyLocationContract_MonthlyRental = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CompanyLocationContract_RentalDeposit = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CompanyRegistrationRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                    CompanyRegistationRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    LocationId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompanyLocation", x => x.Id);
+                    table.PrimaryKey("PK_CompanyRegistrationRequestLocations", x => new { x.CompanyRegistationRequestId, x.LocationId });
                     table.ForeignKey(
-                        name: "FK_CompanyLocation_CompanyRegistrationRequests_CompanyRegistrationRequestId",
-                        column: x => x.CompanyRegistrationRequestId,
-                        principalTable: "CompanyRegistrationRequests",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "CompanyRequestAssociates",
-                columns: table => new
-                {
-                    CompanyRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    AssociateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CompanyRequestAssociates", x => new { x.CompanyRequestId, x.AssociateId });
-                    table.ForeignKey(
-                        name: "FK_CompanyRequestAssociates_CompanyRegistrationRequests_CompanyRequestId",
-                        column: x => x.CompanyRequestId,
-                        principalTable: "CompanyRegistrationRequests",
+                        name: "FK_CompanyRegistrationRequestLocations_CompanyLocations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "CompanyLocations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CompanyRequestAssociates_Person_AssociateId",
-                        column: x => x.AssociateId,
-                        principalTable: "Person",
+                        name: "FK_CompanyRegistrationRequestLocations_CompanyRegistrationRequests_CompanyRegistationRequestId",
+                        column: x => x.CompanyRegistationRequestId,
+                        principalTable: "CompanyRegistrationRequests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -131,23 +125,42 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 {
                     table.PrimaryKey("PK_CompanyLocationOwners", x => new { x.CompanyLocationId, x.OwnerId });
                     table.ForeignKey(
-                        name: "FK_CompanyLocationOwners_CompanyLocation_CompanyLocationId",
+                        name: "FK_CompanyLocationOwners_CompanyLocations_CompanyLocationId",
                         column: x => x.CompanyLocationId,
-                        principalTable: "CompanyLocation",
+                        principalTable: "CompanyLocations",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_CompanyLocationOwners_Person_OwnerId",
+                        name: "FK_CompanyLocationOwners_Persons_OwnerId",
                         column: x => x.OwnerId,
-                        principalTable: "Person",
+                        principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateIndex(
-                name: "IX_CompanyLocation_CompanyRegistrationRequestId",
-                table: "CompanyLocation",
-                column: "CompanyRegistrationRequestId");
+            migrationBuilder.CreateTable(
+                name: "CompanyRegistrationRequestAssociates",
+                columns: table => new
+                {
+                    CompanyRegistationRequestId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AssociateId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyRegistrationRequestAssociates", x => new { x.CompanyRegistationRequestId, x.AssociateId });
+                    table.ForeignKey(
+                        name: "FK_CompanyRegistrationRequestAssociates_CompanyRegistrationRequests_CompanyRegistationRequestId",
+                        column: x => x.CompanyRegistationRequestId,
+                        principalTable: "CompanyRegistrationRequests",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_CompanyRegistrationRequestAssociates_Persons_AssociateId",
+                        column: x => x.AssociateId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_CompanyLocationOwners_OwnerId",
@@ -155,9 +168,14 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_CompanyRequestAssociates_AssociateId",
-                table: "CompanyRequestAssociates",
+                name: "IX_CompanyRegistrationRequestAssociates_AssociateId",
+                table: "CompanyRegistrationRequestAssociates",
                 column: "AssociateId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CompanyRegistrationRequestLocations_LocationId",
+                table: "CompanyRegistrationRequestLocations",
+                column: "LocationId");
         }
 
         /// <inheritdoc />
@@ -167,13 +185,16 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 name: "CompanyLocationOwners");
 
             migrationBuilder.DropTable(
-                name: "CompanyRequestAssociates");
+                name: "CompanyRegistrationRequestAssociates");
 
             migrationBuilder.DropTable(
-                name: "CompanyLocation");
+                name: "CompanyRegistrationRequestLocations");
 
             migrationBuilder.DropTable(
-                name: "Person");
+                name: "Persons");
+
+            migrationBuilder.DropTable(
+                name: "CompanyLocations");
 
             migrationBuilder.DropTable(
                 name: "CompanyRegistrationRequests");

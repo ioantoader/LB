@@ -37,19 +37,34 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                     b.ToTable("CompanyLocationOwners");
                 });
 
-            modelBuilder.Entity("CompanyRequestAssociates", b =>
+            modelBuilder.Entity("CompanyRegistrationRequestAssociates", b =>
                 {
-                    b.Property<Guid>("CompanyRequestId")
+                    b.Property<Guid>("CompanyRegistationRequestId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("AssociateId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("CompanyRequestId", "AssociateId");
+                    b.HasKey("CompanyRegistationRequestId", "AssociateId");
 
                     b.HasIndex("AssociateId");
 
-                    b.ToTable("CompanyRequestAssociates");
+                    b.ToTable("CompanyRegistrationRequestAssociates");
+                });
+
+            modelBuilder.Entity("CompanyRegistrationRequestLocations", b =>
+                {
+                    b.Property<Guid>("CompanyRegistationRequestId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("LocationId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CompanyRegistationRequestId", "LocationId");
+
+                    b.HasIndex("LocationId");
+
+                    b.ToTable("CompanyRegistrationRequestLocations");
                 });
 
             modelBuilder.Entity("IT.DigitalCompany.Models.CompanyLocation", b =>
@@ -58,14 +73,9 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<Guid?>("CompanyRegistrationRequestId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("CompanyRegistrationRequestId");
-
-                    b.ToTable("CompanyLocation");
+                    b.ToTable("CompanyLocations", (string)null);
                 });
 
             modelBuilder.Entity("IT.DigitalCompany.Models.CompanyRegistrationRequest", b =>
@@ -80,7 +90,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                     b.HasKey("Id");
 
-                    b.ToTable("CompanyRegistrationRequests");
+                    b.ToTable("CompanyRegistrationRequests", (string)null);
                 });
 
             modelBuilder.Entity("IT.DigitalCompany.Models.Person", b =>
@@ -97,7 +107,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                     b.HasKey("Id");
 
-                    b.ToTable("Person");
+                    b.ToTable("Persons", (string)null);
                 });
 
             modelBuilder.Entity("CompanyLocationOwners", b =>
@@ -115,7 +125,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("CompanyRequestAssociates", b =>
+            modelBuilder.Entity("CompanyRegistrationRequestAssociates", b =>
                 {
                     b.HasOne("IT.DigitalCompany.Models.Person", null)
                         .WithMany()
@@ -125,17 +135,28 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                     b.HasOne("IT.DigitalCompany.Models.CompanyRegistrationRequest", null)
                         .WithMany()
-                        .HasForeignKey("CompanyRequestId")
+                        .HasForeignKey("CompanyRegistationRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("CompanyRegistrationRequestLocations", b =>
+                {
+                    b.HasOne("IT.DigitalCompany.Models.CompanyRegistrationRequest", null)
+                        .WithMany()
+                        .HasForeignKey("CompanyRegistationRequestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("IT.DigitalCompany.Models.CompanyLocation", null)
+                        .WithMany()
+                        .HasForeignKey("LocationId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("IT.DigitalCompany.Models.CompanyLocation", b =>
                 {
-                    b.HasOne("IT.DigitalCompany.Models.CompanyRegistrationRequest", null)
-                        .WithMany("Locations")
-                        .HasForeignKey("CompanyRegistrationRequestId");
-
                     b.OwnsOne("IT.DigitalCompany.Models.Address", "Address", b1 =>
                         {
                             b1.Property<Guid>("CompanyLocationId")
@@ -188,7 +209,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                             b1.HasKey("CompanyLocationId");
 
-                            b1.ToTable("CompanyLocation");
+                            b1.ToTable("CompanyLocations");
 
                             b1.WithOwner()
                                 .HasForeignKey("CompanyLocationId");
@@ -213,7 +234,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                             b1.HasKey("CompanyLocationId");
 
-                            b1.ToTable("CompanyLocation");
+                            b1.ToTable("CompanyLocations");
 
                             b1.WithOwner()
                                 .HasForeignKey("CompanyLocationId");
@@ -319,7 +340,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("Person");
+                            b1.ToTable("Persons");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -377,7 +398,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("Person");
+                            b1.ToTable("Persons");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -406,7 +427,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                             b1.HasKey("PersonId");
 
-                            b1.ToTable("Person");
+                            b1.ToTable("Persons");
 
                             b1.WithOwner()
                                 .HasForeignKey("PersonId");
@@ -420,11 +441,6 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
                     b.Navigation("IdentityDocument")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("IT.DigitalCompany.Models.CompanyRegistrationRequest", b =>
-                {
-                    b.Navigation("Locations");
                 });
 #pragma warning restore 612, 618
         }

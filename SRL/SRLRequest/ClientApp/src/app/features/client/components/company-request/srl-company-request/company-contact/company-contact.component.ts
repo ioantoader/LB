@@ -24,8 +24,8 @@ export class CompanyContactComponent implements OnInit, OnDestroy {
     });
    }
   ngOnDestroy() {
-    this.save();
-    }
+    //this.save();
+  }
 
   ngOnInit() {
   }

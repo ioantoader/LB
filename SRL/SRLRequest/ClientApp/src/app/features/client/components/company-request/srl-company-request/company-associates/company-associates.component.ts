@@ -3,7 +3,6 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { PersonData } from 'src/app/features/shared/models/person-data.model';
 import { IDCard } from 'src/app/features/shared/models/Identity-document.model';
 import { firstValueFrom } from 'rxjs';
-import { DataService } from 'src/app/features/shared/services/data.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { Contact } from 'src/app/features/shared/models/contact.model';
 import { CompanyAssociateComponent } from '../company-associate/company-associate.component';
@@ -67,7 +66,7 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
 
     let associateData = await this.openAssociateDialog(<PersonData>p);
     if (associateData) {
-      const cr = await this._companyRequestService.addAssociate(associateData);
+      associateData = await this._companyRequestService.addAssociate(associateData);
       this.associates.push(new AssociateGridViewModel(associateData));
       this.associates = [...this.associates];
     }
@@ -89,10 +88,10 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
   }
 
   public async editAssociate(associate: AssociateGridViewModel): Promise<void> {
-    const associateData = await this.openAssociateDialog(associate.underlyingData);
+    let associateData = await this.openAssociateDialog(associate.underlyingData);
     if (associateData) {
-      await this._companyRequestService.updateAssociate(associateData);
-      const idx = this.associates.findIndex(a => a?.underlyingData?.id?.toUpperCase() === associateData.id?.toUpperCase());
+      associateData = await this._companyRequestService.updateAssociate(associateData);
+      const idx = this.associates.findIndex(a => a?.underlyingData?.id?.toUpperCase() === associateData!.id?.toUpperCase());
       const associate = new AssociateGridViewModel(associateData)
       if(idx >= 0) {
         this.associates[idx] = associate;

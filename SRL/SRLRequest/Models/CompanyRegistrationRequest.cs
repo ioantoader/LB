@@ -11,9 +11,16 @@
         public ICollection<CompanyLocation> Locations { get; set; } = new List<CompanyLocation>();
     }
 
-    public class CompanyRequestAssociates
+    public class CompanyRegistrationRequestAssociates
     {
-        public Guid CompanyRequestId { get; set; }
+        public Guid CompanyRegistationRequestId { get; set; }
         public Guid AssociateId { get; set; }
     }
+
+    public class CompanyRegistrationRequestLocations
+    {
+        public Guid CompanyRegistationRequestId { get; set; }
+        public Guid LocationId { get; set; }
+    }
+
 }

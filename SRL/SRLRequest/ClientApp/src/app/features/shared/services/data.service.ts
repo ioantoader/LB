@@ -9,14 +9,14 @@ export class DataService {
   private baseUrl: string = '';
   constructor(private _httpClient: HttpClient) {
   }
-  public addAssociate(companyId: string, associate: PersonData): Promise<CompanyRequest> {
+  public addAssociate(companyId: string, associate: PersonData): Promise<PersonData> {
     const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${companyId}/associates`;
-    return firstValueFrom(this._httpClient.post<CompanyRequest>(uri, associate));
+    return firstValueFrom(this._httpClient.post<PersonData>(uri, associate));
   }
 
-  public updateAssociate(associate: PersonData): Promise<CompanyRequest> {
+  public updateAssociate(associate: PersonData): Promise<PersonData> {
     const uri = `${this.baseUrl}/api/CompanyRegistration/requests/associates`;
-    return firstValueFrom(this._httpClient.put<CompanyRequest>(uri, associate));
+    return firstValueFrom(this._httpClient.put<PersonData>(uri, associate));
 
   }
 

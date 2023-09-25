@@ -6,6 +6,7 @@ import { MenuItem } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PersonData } from "./person-data.model";
 
+
 @Injectable()
 export class CompanyRequestService {
   private _companyRequest!: CompanyRequest
@@ -45,16 +46,30 @@ export class CompanyRequestService {
   }
 
   public async updateContact(value: Contact) {
-    const requestId = this._companyRequest?.id ?? crypto.randomUUID();
+    const requestId = this._companyRequest?.id!
     this.companyRequest = await this._dataService.updateContact(requestId, value);
   }
-  public async addAssociate(associateData: PersonData) {
-    const requestId = this._companyRequest?.id ?? crypto.randomUUID();
-    this.companyRequest = await this._dataService.addAssociate(requestId, associateData);
+  public async addAssociate(associateData: PersonData): Promise<PersonData> {
+    const requestId = this._companyRequest?.id!
+    const p = await this._dataService.addAssociate(requestId, associateData);
+    let associates = this.companyRequest.associates;
+    if (!associates) {
+      associates = this.companyRequest.associates = [];
+    }
+    associates.push(p);
+    return p;
   }
 
-  public async updateAssociate(associateData: PersonData) {    
-    this.companyRequest = await this._dataService.updateAssociate(associateData);
+  public async updateAssociate(associateData: PersonData): Promise<PersonData> {    
+    const response = await this._dataService.updateAssociate(associateData);
+    const asociates = this.companyRequest.associates;
+    if (asociates) {
+      const idx = asociates.findIndex(p => p.id?.toUpperCase() == response.id?.toUpperCase());
+      if (idx >= 0) {
+        asociates[idx] = response;
+      }
+    }
+    return response;
   }
 
   public async deleteAssociate(associateId: string) {

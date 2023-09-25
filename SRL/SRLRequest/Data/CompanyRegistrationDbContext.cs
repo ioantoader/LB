@@ -17,20 +17,15 @@ namespace IT.DigitalCompany.Data
             base.OnModelCreating(modelBuilder);
 
             var p = OnPersonModelCreating(modelBuilder);
+            OnCompanyLocationModelCreating(modelBuilder);
             var cr = OnCompanyRegistrationRequestsModelCreating(modelBuilder);
-            cr.HasMany(e => e.Associates)
-                .WithMany()
-                .UsingEntity< CompanyRequestAssociates>(joinEntityName: nameof(CompanyRequestAssociates),                
-                configureRight: r => r.HasOne<Person>().WithMany().HasForeignKey(e => e.AssociateId).HasPrincipalKey(e => e.Id),
-                configureLeft: l => l.HasOne<CompanyRegistrationRequest>().WithMany().HasForeignKey(e => e.CompanyRequestId).HasPrincipalKey(e => e.Id),
-                configureJoinEntityType: j => j.HasKey(e => new { e.CompanyRequestId, e.AssociateId })
-                );
                                         
         }
 
         protected EntityTypeBuilder<CompanyRegistrationRequest> OnCompanyRegistrationRequestsModelCreating(ModelBuilder modelBuilder)
         {
-            var companyRequestEntity = modelBuilder.Entity<CompanyRegistrationRequest>();
+            var companyRequestEntity = modelBuilder.Entity<CompanyRegistrationRequest>()
+                .ToTable("CompanyRegistrationRequests");
             companyRequestEntity.Property(p => p.Id).IsRequired();
             companyRequestEntity.Property(p => p.UserId).IsRequired();
 
@@ -38,8 +33,22 @@ namespace IT.DigitalCompany.Data
 
             OnContactModelCreating(modelBuilder, contactEntity);
 
-            OnCompanyLocationModelCreating(modelBuilder);
+            companyRequestEntity.HasMany(e => e.Associates)
+                .WithMany()
+                .UsingEntity<CompanyRegistrationRequestAssociates>(joinEntityName: nameof(CompanyRegistrationRequestAssociates),
+                configureRight: r => r.HasOne<Person>().WithMany().HasForeignKey(e => e.AssociateId).HasPrincipalKey(e => e.Id),
+                configureLeft: l => l.HasOne<CompanyRegistrationRequest>().WithMany().HasForeignKey(e => e.CompanyRegistationRequestId).HasPrincipalKey(e => e.Id),
+                configureJoinEntityType: j => j.HasKey(e => new { e.CompanyRegistationRequestId, e.AssociateId })
+            );
+            companyRequestEntity.HasMany(e => e.Locations)
+                .WithMany()
+                .UsingEntity<CompanyRegistrationRequestLocations>(joinEntityName: nameof(CompanyRegistrationRequestLocations),
+                configureRight: r => r.HasOne<CompanyLocation>().WithMany().HasForeignKey(e => e.LocationId).HasPrincipalKey(e => e.Id),
+                configureLeft: l => l.HasOne<CompanyRegistrationRequest>().WithMany().HasForeignKey(e => e.CompanyRegistationRequestId).HasPrincipalKey(e => e.Id),
+                configureJoinEntityType: j => j.HasKey(e => new { e.CompanyRegistationRequestId, e.LocationId })
+                );
 
+            
             companyRequestEntity.HasKey(p => p.Id);
             return companyRequestEntity;
 
@@ -180,7 +189,8 @@ namespace IT.DigitalCompany.Data
 
         protected EntityTypeBuilder<Person> OnPersonModelCreating(ModelBuilder modelBuilder)
         {
-            var associateEntity = modelBuilder.Entity<Person>();                
+            var associateEntity = modelBuilder.Entity<Person>()
+                .ToTable("Persons");                
 
             associateEntity.Property(p => p.Id)
                 .IsRequired();
@@ -203,7 +213,8 @@ namespace IT.DigitalCompany.Data
 
         protected EntityTypeBuilder<CompanyLocation> OnCompanyLocationModelCreating(ModelBuilder modelBuilder)
         {
-            var companyLocationEntity = modelBuilder.Entity<CompanyLocation>();
+            var companyLocationEntity = modelBuilder.Entity<CompanyLocation>()
+                .ToTable("CompanyLocations");
             companyLocationEntity.Property(p => p.Id)
                 .IsRequired();
 
