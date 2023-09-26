@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CompanyRequest } from '../models/company-request.model';
 import { firstValueFrom } from 'rxjs';
 import { Contact } from '../models/contact.model';
+import { CompanyLocation } from '../models/company-location.model';
 @Injectable()
 export class DataService {
   private baseUrl: string = '';
@@ -26,6 +27,10 @@ export class DataService {
     await firstValueFrom(this._httpClient.delete(uri));
   }
 
+  public addLocation(companyId: string, location: CompanyLocation): Promise<CompanyLocation> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${companyId}/locations`;
+    return firstValueFrom(this._httpClient.post<CompanyLocation>(uri, location));
+  }
   /*
   public updateCompanyRequest(companyRequest: CompanyRequest): Promise<CompanyRequest> {
     console.error(companyRequest);

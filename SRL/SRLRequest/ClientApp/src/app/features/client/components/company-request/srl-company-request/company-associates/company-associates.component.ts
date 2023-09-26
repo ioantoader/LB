@@ -26,6 +26,8 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
     private _router: Router,
     private _route: ActivatedRoute) {
 
+    this.associates = (this._companyRequestService?.companyRequest?.associates ?? [])
+      .map(a => new AssociateGridViewModel(a));
   }
 
   ngOnInit() {

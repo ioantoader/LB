@@ -77,25 +77,87 @@ namespace IT.DigitalCompany.Infrastructure
 
         }
 
-        public async Task<CompanyRegistrationRequest?> FindCompanyRegistrationRequestAsync(Guid id)
+        public async Task DeleteRegistrationRequestAssociateAsync(Guid id)
         {
-            var r = await this.Context.CompanyRegistrationRequests
-                .Include(r => r.Associates)
-                .Include(r => r.Locations)
-                .ThenInclude(l => l.Owners)
+
+            var p = new Person()
+            {
+                Id = id
+            };
+
+            this.Context.Remove(p);
+            await this.Context.SaveChangesAsync()
+                .ConfigureAwait(false);
+
+        }
+        public async Task AddRegistrationRequestLocationAsync(CompanyRegistrationRequest companyRegistrationRequest, CompanyLocation companyLocation)
+        {
+            if(null == companyRegistrationRequest) throw new ArgumentNullException(nameof(companyRegistrationRequest));
+            if(null == companyLocation) throw new ArgumentNullException(nameof(companyLocation));
+
+            Context.Attach(companyRegistrationRequest);
+            Context.Add(companyLocation);
+            var owners = companyLocation.Owners?? Enumerable.Empty<Person>();
+            foreach (var owner in owners)
+            {
+                this.Context.Add(owner);
+            }
+            companyRegistrationRequest.Locations.Add(companyLocation);
+            
+            await Context.SaveChangesAsync()
+                .ConfigureAwait(false);
+
+        }
+
+        public async Task<CompanyRegistrationRequest?> FindCompanyRegistrationRequestAsync(Guid id
+                        , Boolean includeAssociates = false
+                        , Boolean includeLocations = false
+                        , Boolean includeLocationsOwners = false)
+        {
+            IQueryable<CompanyRegistrationRequest> query = this.Context.CompanyRegistrationRequests;
+            if (includeAssociates)
+            {
+                query = query.Include(r => r.Associates);
+            }
+            if (includeLocations)
+            {
+                var t = query.Include(r => r.Locations);
+                query = t;
+                if (includeLocationsOwners)
+                {
+                    query = t.ThenInclude(l => l.Owners);
+                }
+            }
+
+
+            var r = await query
                 .SingleAsync(r => r.Id.Equals(id))
                 .ConfigureAwait(false);
 
             return r;
         }
 
-        public async Task<CompanyRegistrationRequest?> FindCompanyRegistrationRequestAsync(Expression<Func<CompanyRegistrationRequest, Boolean>> predicate)
+        public async Task<CompanyRegistrationRequest?> FindCompanyRegistrationRequestAsync(Expression<Func<CompanyRegistrationRequest, Boolean>> predicate
+            ,Boolean includeAssociates = false
+            ,Boolean includeLocations = false
+            ,Boolean includeLocationsOwners = false)
         {
-            var r = await this.Context.CompanyRegistrationRequests
-                .Include(r => r.Associates)
-                .Include(r => r.Locations)
-                .ThenInclude(l => l.Owners)
-                .SingleAsync(predicate, CancellationToken.None)
+            IQueryable<CompanyRegistrationRequest> query =  this.Context.CompanyRegistrationRequests;
+            if(includeAssociates)
+            {
+                query = query.Include(r => r.Associates);
+            }
+            if(includeLocations)
+            {
+                var t = query.Include(r => r.Locations);
+                query = t;
+                if(includeLocationsOwners)
+                {
+                    query = t.ThenInclude(l => l.Owners);
+                }
+            }
+
+            var r = await query.SingleAsync(predicate, CancellationToken.None)
                 .ConfigureAwait(false);
 
             return r;

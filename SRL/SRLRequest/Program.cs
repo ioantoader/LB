@@ -80,6 +80,7 @@ builder.Services.AddRazorPages();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
@@ -98,6 +99,13 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseCors(policy =>
+{
+    policy.AllowAnyOrigin()
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+});
+
 
 app.UseAuthentication();
 app.UseIdentityServer();

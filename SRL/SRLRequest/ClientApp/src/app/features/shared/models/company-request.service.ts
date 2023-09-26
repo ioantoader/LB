@@ -5,6 +5,7 @@ import { Contact } from "./contact.model";
 import { MenuItem } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PersonData } from "./person-data.model";
+import { CompanyLocation } from "./company-location.model";
 
 
 @Injectable()
@@ -74,6 +75,22 @@ export class CompanyRequestService {
 
   public async deleteAssociate(associateId: string) {
     await this._dataService.deleteAssociate(associateId);
+    const asociates = this.companyRequest.associates;
+    if (asociates) {
+      this.companyRequest.associates = asociates.filter(a => a.id?.toUpperCase() !== associateId.toUpperCase());
+    }
+
+  }
+
+  public async addLocation(location: CompanyLocation): Promise<CompanyLocation> {
+    const requestId = this._companyRequest?.id!
+    const p = await this._dataService.addLocation(requestId, location);
+    let locations = this.companyRequest.locations;
+    if (!locations) {
+      locations = this.companyRequest.locations = [];
+    }
+    locations.push(p);
+    return p;
   }
 
   public gotoCompanyAssociates(router: Router, route: ActivatedRoute) {

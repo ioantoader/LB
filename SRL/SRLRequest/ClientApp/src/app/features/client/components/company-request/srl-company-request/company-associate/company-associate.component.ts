@@ -11,7 +11,7 @@ import { PersonData } from 'src/app/features/shared/models/person-data.model';
 export class CompanyAssociateComponent implements OnInit {
   private _associateData?: PersonData
   public  associateDataFormGroup: FormGroup;
-  constructor(private _dialogRef: DynamicDialogRef, private _config: DynamicDialogConfig,  fb: FormBuilder) {
+  constructor(private _dialogRef: DynamicDialogRef, private _config: DynamicDialogConfig, fb: FormBuilder) {
     this._associateData = _config.data;
     this.associateDataFormGroup = fb.group(
       {
@@ -58,9 +58,10 @@ export class CompanyAssociateComponent implements OnInit {
   }
 
   public save(): void {
-    const id = this._associateData?.id;
-    const a:PersonData = this.associateDataFormGroup.value;
-    a.id = id;
+    const a: PersonData = this.associateDataFormGroup.value;
+    if (a.id === null) {
+      a.id = undefined;
+    }
     this._associateData = a;
     this._dialogRef.close(this._associateData);
   }

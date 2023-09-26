@@ -37,7 +37,9 @@ export class LocationOwnerComponent implements OnInit {
 
   public save() {
     const t: Partial<PersonData> = this.locationOwnerFormGroup.value;
-    t.id = this._locationOwner?.id;
+    if (t.id == null) {
+      t.id = undefined;
+    }
     this._locationOwner = t;
     this._dialogRef.close(this._locationOwner);
   }

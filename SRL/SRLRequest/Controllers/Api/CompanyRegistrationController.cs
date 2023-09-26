@@ -8,6 +8,7 @@ using Duende.IdentityServer.Extensions;
 using IT.DigitalCompany.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+using System;
 
 namespace IT.DigitalCompany.Controllers.Api
 {
@@ -69,7 +70,7 @@ namespace IT.DigitalCompany.Controllers.Api
             return person;
         }
 
-        [HttpPost("requests/associates")]
+        [HttpPut("requests/associates")]
         public async Task<ActionResult<Person>> PutAssociate([FromBody] Person person)
         {
             if (!ModelState.IsValid)
@@ -92,17 +93,48 @@ namespace IT.DigitalCompany.Controllers.Api
 
 
         [HttpDelete("requests/associates/{id}")]
-        public ActionResult<CompanyRegistrationRequest> DeleteAssociate([FromRoute]Guid id)
+        public async Task<ActionResult<CompanyRegistrationRequest>> DeleteAssociate([FromRoute]Guid id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var request = new CompanyRegistrationRequest();
+            var r = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(
+                r => r.Associates.Any(a => a.Id.Equals(id)))
+                .ConfigureAwait(false);
+            if (null == r)
+                return NotFound();
+            if (!String.Equals(r.UserId, this.User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+            await this._companyRegistrationManager.DeleteRegistrationRequestAssociateAsync(id)
+                .ConfigureAwait(false);
 
-            var col = request.Associates ??= new Collection<Person>();            
-            return request;
+            return r;
+        }
+
+        [HttpPost("requests/{companyRequestId}/locations")]
+        public async Task<ActionResult<CompanyLocation>> PostLocation([FromRoute] Guid companyRequestId,
+            [FromBody] CompanyLocation location)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var r = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId)
+                .ConfigureAwait(false);
+
+            if (null == r)
+                return NotFound();
+            if (!String.Equals(r.UserId, User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+
+            await this._companyRegistrationManager
+                .AddRegistrationRequestLocationAsync(r, location)
+                .ConfigureAwait(false);
+
+            return location;
+
         }
 
         [HttpGet("requests")]

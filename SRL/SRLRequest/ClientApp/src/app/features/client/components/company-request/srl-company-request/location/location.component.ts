@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { DialogService, DynamicDialogConfig, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { CompanyLocation } from 'src/app/features/shared/models/company-location.model';
 import { LocationOwnerComponent } from './location-owner/location-owner.component';
 import { PersonData } from 'src/app/features/shared/models/person-data.model';
 import { firstValueFrom } from 'rxjs';
 import { ConfirmationService } from 'primeng/api';
+import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-location',
@@ -47,6 +48,7 @@ export class LocationComponent implements OnInit, OnDestroy {
             'rentalDeposit': this.location?.contract?.rentalDeposit,
           }),
     })
+
   }
   ngOnDestroy(): void {
     this.childDialogRef?.close();
@@ -59,7 +61,7 @@ export class LocationComponent implements OnInit, OnDestroy {
   public async addOwner() {
     const newOwner = await this.openLocationOwnerDialog();
     if(newOwner) {
-      newOwner.id = crypto.randomUUID();
+      newOwner.id = `_${crypto.randomUUID()}`;
       this.locationOwners.push(newOwner);
       this.locationOwners = [...this.locationOwners];
     }
@@ -110,10 +112,18 @@ export class LocationComponent implements OnInit, OnDestroy {
 
   public save() {
     var t: CompanyLocation = this.locationFormGroup.value;
-    t.owners = this.locationOwners;
+    if (t.id === null) {
+      t.id = undefined;
+    }
+    const owners = this.locationOwners ?? [];
+    owners.forEach(o => {
+      if (o.id?.startsWith('_') ?? false) {
+        o.id = undefined;
+      }
+    });
+    t.owners = owners;
     this.location = t;
     this._dialogRef.close(this.location);
-
   }
 
 }
