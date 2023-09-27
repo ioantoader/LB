@@ -6,12 +6,12 @@ import { MenuItem } from "primeng/api";
 import { ActivatedRoute, Router } from "@angular/router";
 import { PersonData } from "./person-data.model";
 import { CompanyLocation } from "./company-location.model";
-
+import { BehaviorSubject, Observable, firstValueFrom } from "rxjs";
 
 @Injectable()
 export class CompanyRequestService {
-  private _companyRequest!: CompanyRequest
-
+  private _companyRequest: BehaviorSubject<CompanyRequest> = new BehaviorSubject<CompanyRequest>(undefined!)
+  public companyRequest$: Observable<CompanyRequest> = this._companyRequest.asObservable();
   public readonly steps: MenuItem[] = [];
   constructor(private _dataService: DataService) {
     this.steps = [
@@ -39,23 +39,37 @@ export class CompanyRequestService {
 
   }
 
-  public get companyRequest(): CompanyRequest {
-    return this._companyRequest;
+  public async loadCompanyRequest(requestId: string): Promise<CompanyRequest> {
+    const r = await this._dataService.getCompanyRegistrationRequest(requestId);
+    this.setCompanyRequest(r);
+    return r;
+
   }
-  public set companyRequest(value: CompanyRequest) {
-    this._companyRequest = value;
+  public setCompanyRequest(value: CompanyRequest) {
+    this._companyRequest.next(value);
+  }
+
+  private async currentCompanyRequest(): Promise<CompanyRequest> {
+    return await firstValueFrom(this.companyRequest$);
+  }
+  public async CompanyRequest(requestId: string): Promise<CompanyRequest> {
+    const r = await this._dataService.getCompanyRegistrationRequest(requestId);
+    this.setCompanyRequest(r);
+    return r;
   }
 
   public async updateContact(value: Contact) {
-    const requestId = this._companyRequest?.id!
-    this.companyRequest = await this._dataService.updateContact(requestId, value);
+    const requestId = (await this.currentCompanyRequest())?.id!;
+    this.setCompanyRequest(await this._dataService.updateContact(requestId, value));
   }
   public async addAssociate(associateData: PersonData): Promise<PersonData> {
-    const requestId = this._companyRequest?.id!
+    const requestId = (await this.currentCompanyRequest())?.id!;
     const p = await this._dataService.addAssociate(requestId, associateData);
-    let associates = this.companyRequest.associates;
+
+    const companyRequest = await this.currentCompanyRequest();
+    let associates = companyRequest.associates;
     if (!associates) {
-      associates = this.companyRequest.associates = [];
+      associates = companyRequest.associates = [];
     }
     associates.push(p);
     return p;
@@ -63,7 +77,8 @@ export class CompanyRequestService {
 
   public async updateAssociate(associateData: PersonData): Promise<PersonData> {    
     const response = await this._dataService.updateAssociate(associateData);
-    const asociates = this.companyRequest.associates;
+    const companyRequest = await this.currentCompanyRequest();
+    const asociates = companyRequest.associates;
     if (asociates) {
       const idx = asociates.findIndex(p => p.id?.toUpperCase() == response.id?.toUpperCase());
       if (idx >= 0) {
@@ -75,19 +90,21 @@ export class CompanyRequestService {
 
   public async deleteAssociate(associateId: string) {
     await this._dataService.deleteAssociate(associateId);
-    const asociates = this.companyRequest.associates;
+    const companyRequest = await this.currentCompanyRequest();
+    const asociates = companyRequest.associates;
     if (asociates) {
-      this.companyRequest.associates = asociates.filter(a => a.id?.toUpperCase() !== associateId.toUpperCase());
+      companyRequest.associates = asociates.filter(a => a.id?.toUpperCase() !== associateId.toUpperCase());
     }
 
   }
 
   public async addLocation(location: CompanyLocation): Promise<CompanyLocation> {
-    const requestId = this._companyRequest?.id!
+    const companyRequest = await this.currentCompanyRequest();
+    const requestId = companyRequest?.id!
     const p = await this._dataService.addLocation(requestId, location);
-    let locations = this.companyRequest.locations;
+    let locations = companyRequest.locations;
     if (!locations) {
-      locations = this.companyRequest.locations = [];
+      locations = companyRequest.locations = [];
     }
     locations.push(p);
     return p;

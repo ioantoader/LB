@@ -7,6 +7,8 @@ import { ConfirmationService } from 'primeng/api';
 import { CompanyRequestService } from '../../../../../shared/models/company-request.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Address } from '../../../../../shared/models/address.model';
+import { PersonData } from '../../../../../shared/models/person-data.model';
+import { IDCard } from '../../../../../shared/models/Identity-document.model';
 
 @Component({
   selector: 'app-company-locations',
@@ -24,7 +26,11 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
               private _router: Router,
               private _route: ActivatedRoute
   ) {
-    this.locations = _companyRequestService.companyRequest?.locations?? [];
+    this._companyRequestService.companyRequest$.subscribe(r => {
+      if (r) {
+        this.locations = [...(r.locations ?? [])];
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -46,10 +52,34 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
     let c: Partial<CompanyLocationContract> = {
       durationInYears: 10,
     }
+    let id: Partial<IDCard> = {
+      serial: 'xb',
+      number: '12345',
+      cnp: '1770477',
+      birthCountry: 'Romania',
+      birthState: 'Bistrita-Nasaud',
+      birthCity: 'Rebra',
+      citizenship: 'Romana',
+      issueDate: new Date(2020, 2, 2),
+      expirationDate: new Date(2030, 2, 2),
+      issueBy: 'Politie',
+      birthDate: new Date(1977, 3, 13),
+    }
+
+    let o: Partial<PersonData> = {
+      address: <Address>a,
+      contact: {
+        email: 'ioan.toader@gmail.com',
+        phoneNumber: '01739656754',
+        firstName: 'ioan',
+        lastName: 'Toader'
+      },
+      identityDocument: id as IDCard
+    }
     let location: CompanyLocation | null | undefined = {
       address: <Address>a,
       contract: <CompanyLocationContract>c,
-      owners: []
+      owners: [o as PersonData]
 
     };
     location = await this.openLocationDialog(location);

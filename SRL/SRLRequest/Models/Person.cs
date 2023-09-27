@@ -1,4 +1,6 @@
-﻿using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace IT.DigitalCompany.Models
 {
@@ -19,6 +21,11 @@ namespace IT.DigitalCompany.Models
 
         public IdentityDocument IdentityDocument { get; set; } = new IdentityDocument();
         public Address Address { get; set; } = new Address();
+
+        [NotMapped]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        internal Boolean IsNew => Guid.Empty.Equals(Id);
 
     }
 }

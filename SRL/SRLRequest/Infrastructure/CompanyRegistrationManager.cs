@@ -16,6 +16,10 @@ namespace IT.DigitalCompany.Infrastructure
 
         CompanyRegistrationDbContext Context {  get; set; }
 
+        internal DbSet<CompanyLocation> Locations => Context.Set<CompanyLocation>();
+        internal DbSet<Person> Persons => Context.Set<Person>();
+
+        internal DbSet<CompanyRegistrationRequest> CompanyRegistrationRequests => Context.CompanyRegistrationRequests;
         public async Task CreateRegistrationRequestAsync(CompanyRegistrationRequest companyRequest)
         {
             if (null == companyRequest) throw new ArgumentNullException(nameof(companyRequest));
@@ -49,16 +53,8 @@ namespace IT.DigitalCompany.Infrastructure
             if (null == person) throw new ArgumentNullException(nameof(person));
 
 
-            this.Context.Attach(companyRegistrationRequest);
-            if (person.Id.Equals(Guid.Empty))
-            {
-                this.Context.Attach(person);
-            }
-            else
-            {
-                this.Context.Add(person);
-
-            }
+            this.Context.CompanyRegistrationRequests.Attach(companyRegistrationRequest);
+            this.Persons.Add(person);
             (companyRegistrationRequest.Associates ??= new List<Person>())
                     .Add(person);
             await this.Context.SaveChangesAsync()
@@ -70,8 +66,8 @@ namespace IT.DigitalCompany.Infrastructure
         {
             if (null == person) throw new ArgumentNullException(nameof(person));
 
-            this.Context.Attach(person);
-            this.Context.Update(person);
+            this.Persons.Attach(person);
+            this.Persons.Update(person);
             await this.Context.SaveChangesAsync()
                 .ConfigureAwait(false);
 
@@ -80,12 +76,12 @@ namespace IT.DigitalCompany.Infrastructure
         public async Task DeleteRegistrationRequestAssociateAsync(Guid id)
         {
 
-            var p = new Person()
+            var p = this.Persons.Local.FirstOrDefault(p => p.Id.Equals(id))??new Person()
             {
                 Id = id
             };
 
-            this.Context.Remove(p);
+            this.Persons.Remove(p);
             await this.Context.SaveChangesAsync()
                 .ConfigureAwait(false);
 
@@ -95,15 +91,58 @@ namespace IT.DigitalCompany.Infrastructure
             if(null == companyRegistrationRequest) throw new ArgumentNullException(nameof(companyRegistrationRequest));
             if(null == companyLocation) throw new ArgumentNullException(nameof(companyLocation));
 
-            Context.Attach(companyRegistrationRequest);
-            Context.Add(companyLocation);
+            Context.CompanyRegistrationRequests.Attach(companyRegistrationRequest);
+            Locations.Add(companyLocation);
             var owners = companyLocation.Owners?? Enumerable.Empty<Person>();
             foreach (var owner in owners)
             {
-                this.Context.Add(owner);
+                this.Persons.Add(owner);
             }
             companyRegistrationRequest.Locations.Add(companyLocation);
             
+            await Context.SaveChangesAsync()
+                .ConfigureAwait(false);
+
+        }
+        public async Task UpdateRegistrationRequestLocationAsync(CompanyLocation companyLocation)
+        {
+            
+            if (null == companyLocation) throw new ArgumentNullException(nameof(companyLocation));
+
+            var dbLocation = await this.Locations
+                .AsNoTracking()
+                .Include(l => l.Owners)
+                .AsNoTracking()
+                .SingleAsync(c => c.Id.Equals(companyLocation.Id))
+                .ConfigureAwait(false);
+
+            if(null == dbLocation)
+                throw new KeyNotFoundException(companyLocation.Id.ToString());
+            
+            Locations.Attach(companyLocation);
+            var dbOwners = dbLocation.Owners?? Enumerable.Empty<Person>();
+            var newOwners = companyLocation.Owners ?? Enumerable.Empty<Person>();
+            foreach(var dbOwner in dbOwners)
+            {
+                if(!newOwners.Any(no => no.Id.Equals(dbOwner.Id)))
+                {
+                    Persons.Remove(dbOwner);
+                } 
+            }
+            foreach (var owner in newOwners)
+            {
+                if (owner.IsNew)
+                {
+                    this.Persons.Add(owner);
+                }
+                else
+                {
+                    this.Persons.Attach(owner);
+                    this.Persons.Update(owner);
+                }
+            }
+            
+            Locations.Update(companyLocation);
             await Context.SaveChangesAsync()
                 .ConfigureAwait(false);
 

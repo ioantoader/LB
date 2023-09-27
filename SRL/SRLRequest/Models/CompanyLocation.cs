@@ -1,4 +1,6 @@
-﻿namespace IT.DigitalCompany.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace IT.DigitalCompany.Models
 {
     public class CompanyLocationContract
     {
@@ -15,6 +17,11 @@
         public CompanyLocationContract Contract { get; set; } = new CompanyLocationContract();
 
         public ICollection<Person> Owners { get; set; } = new List<Person>();
+        [NotMapped]
+        [System.Text.Json.Serialization.JsonIgnore]
+        [Newtonsoft.Json.JsonIgnore]
+        internal Boolean IsNew => Guid.Empty.Equals(Id);
+
 
     }
 

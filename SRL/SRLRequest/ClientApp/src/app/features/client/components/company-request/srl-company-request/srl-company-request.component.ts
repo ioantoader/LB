@@ -20,37 +20,27 @@ export class SRLCompanyRequestComponent implements OnInit {
     private _auth: AuthorizeService) {
     this.items = _companyRegisterRequestService.steps;
     this.loadCompanyRegistrationRequest();
+    console.error('enter');
   }
 
   async ngOnInit() {    
     const u = await firstValueFrom(this._auth.getUser());    
   }
 
-  private async loadCompanyRegistrationRequest() {    
-    const requestId = this._route.snapshot.paramMap.get('companyId');
-    var p = new Promise<CompanyRequest | undefined | null>((resolve, reject) => {
-      this._router.events
-        .pipe(
-          filter((event) => event instanceof NavigationEnd)
-          , take(1)
-        ).subscribe({ next: e => {
-          const s = this._router.getCurrentNavigation()?.extras?.state;
-          let cr: CompanyRequest | undefined | null = undefined;
-          if (s) {
-            cr = s[requestId!];
-          }
-          resolve(cr);                    
-        },
-          error: err => reject(err)          
-        });
-
-    })    
-    let request = await p;
-    if (!request) {
-      request = {};
+  private async loadCompanyRegistrationRequest() {
+ 
+    const requestId = this._route.snapshot.paramMap.get('companyId')!;
+    const s = this._router.getCurrentNavigation()?.extras?.state;
+    let request: CompanyRequest | null | undefined;
+    if (s) {
+      request = s[requestId];
     }
-
-    this._companyRegisterRequestService.companyRequest = request;
+    if (!request) {
+      request = await this._companyRegisterRequestService.loadCompanyRequest(requestId);
+    }
+    else {
+      this._companyRegisterRequestService.setCompanyRequest(request);
+    }
     
   }
 }

@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using IT.DigitalCompany.Models;
-using System.Collections.ObjectModel;
 using IT.DigitalCompany.Infrastructure;
-using System.ComponentModel.DataAnnotations;
 using Duende.IdentityServer.Extensions;
 using IT.DigitalCompany.Extensions;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using System;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace IT.DigitalCompany.Controllers.Api
 {
@@ -21,6 +19,8 @@ namespace IT.DigitalCompany.Controllers.Api
         {
             _companyRegistrationManager = companyRegistrationManager ?? throw new ArgumentNullException(nameof(companyRegistrationManager));
         }
+
+        [Authorize()]
         [HttpPut("requests/{companyRequestId}/contact")]
         public async Task<ActionResult<CompanyRegistrationRequest>> PutContact([FromRoute] Guid companyRequestId,
             Contact contact)
@@ -30,14 +30,18 @@ namespace IT.DigitalCompany.Controllers.Api
                 return BadRequest(ModelState);
             }
 
-            var registationRequest = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId)
+            var registationRequest = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId,
+                includeAssociates: true,
+                includeLocations: true,
+                includeLocationsOwners: true)
                 .ConfigureAwait(false);
             if (null == registationRequest)
             {
                 return NotFound();
             }
 
-            if(!String.Equals(registationRequest.UserId,User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(registationRequest.UserId,subjectId, StringComparison.OrdinalIgnoreCase))
             {
                 return Forbid();
             }
@@ -47,6 +51,7 @@ namespace IT.DigitalCompany.Controllers.Api
             return registationRequest;
         }
 
+        [Authorize()]
         [HttpPost("requests/{companyRequestId}/associates")]
         public async Task<ActionResult<Person>> PostAssociate([FromRoute] Guid companyRequestId,
             [FromBody] Person person)
@@ -60,7 +65,8 @@ namespace IT.DigitalCompany.Controllers.Api
 
             if (null == r)
                 return NotFound();
-            if (!String.Equals(r.UserId, User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(r.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
                 return Forbid();
 
             await this._companyRegistrationManager
@@ -70,6 +76,7 @@ namespace IT.DigitalCompany.Controllers.Api
             return person;
         }
 
+        [Authorize()]
         [HttpPut("requests/associates")]
         public async Task<ActionResult<Person>> PutAssociate([FromBody] Person person)
         {
@@ -83,7 +90,8 @@ namespace IT.DigitalCompany.Controllers.Api
                 .ConfigureAwait(false);
             if (null == r)
                 return NotFound();
-            if (!String.Equals(r.UserId, this.User.GetSubjectId(),StringComparison.OrdinalIgnoreCase))
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(r.UserId, subjectId,StringComparison.OrdinalIgnoreCase))
                 return Forbid();
             await this._companyRegistrationManager.UpdateRegistrationRequestAssociateAsync(person)
                 .ConfigureAwait(false);
@@ -92,6 +100,7 @@ namespace IT.DigitalCompany.Controllers.Api
         }
 
 
+        [Authorize()]
         [HttpDelete("requests/associates/{id}")]
         public async Task<ActionResult<CompanyRegistrationRequest>> DeleteAssociate([FromRoute]Guid id)
         {
@@ -101,11 +110,13 @@ namespace IT.DigitalCompany.Controllers.Api
             }
 
             var r = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(
-                r => r.Associates.Any(a => a.Id.Equals(id)))
+                r => r.Associates.Any(a => a.Id.Equals(id)),
+                includeAssociates: true, includeLocations: true, includeLocationsOwners: true)
                 .ConfigureAwait(false);
             if (null == r)
                 return NotFound();
-            if (!String.Equals(r.UserId, this.User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(r.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
                 return Forbid();
             await this._companyRegistrationManager.DeleteRegistrationRequestAssociateAsync(id)
                 .ConfigureAwait(false);
@@ -113,6 +124,7 @@ namespace IT.DigitalCompany.Controllers.Api
             return r;
         }
 
+        [Authorize()]
         [HttpPost("requests/{companyRequestId}/locations")]
         public async Task<ActionResult<CompanyLocation>> PostLocation([FromRoute] Guid companyRequestId,
             [FromBody] CompanyLocation location)
@@ -126,7 +138,8 @@ namespace IT.DigitalCompany.Controllers.Api
 
             if (null == r)
                 return NotFound();
-            if (!String.Equals(r.UserId, User.GetSubjectId(), StringComparison.OrdinalIgnoreCase))
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(r.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
                 return Forbid();
 
             await this._companyRegistrationManager
@@ -137,15 +150,96 @@ namespace IT.DigitalCompany.Controllers.Api
 
         }
 
+        [Authorize()]
+        [HttpPost("requests/locations")]
+        public async Task<ActionResult<CompanyLocation>> putLocation(
+            [FromBody] CompanyLocation location)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            if(null == location)
+                throw new ArgumentNullException(nameof(location));
+
+            var r = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(
+                r => r.Locations.Any(l => l.Id.Equals(location.Id)))
+                .ConfigureAwait(false);
+
+            if (null == r)
+                return NotFound();
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(r.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+
+            await this._companyRegistrationManager
+                .UpdateRegistrationRequestLocationAsync(location)
+                .ConfigureAwait(false);
+
+            return location;
+
+        }
+        
+        [Authorize()]
         [HttpGet("requests")]
-        public ActionResult<IEnumerable<CompanyRegistrationRequest>> Get()
+        public async Task<ActionResult<IEnumerable<CompanyRegistrationRequest>>> Get([FromQuery]Boolean? includeAssociates = true,
+            [FromQuery]Boolean? includeLocations = true, [FromQuery] Boolean? includeLocationOwners = true)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            return new ActionResult<IEnumerable<CompanyRegistrationRequest>>(Enumerable.Empty<CompanyRegistrationRequest>());
+            var subjectId = User.GetSubjectId();
+            var query = this._companyRegistrationManager.CompanyRegistrationRequests
+                .AsNoTracking()
+                .Where(r => r.UserId.Equals(subjectId));
+            if (includeAssociates.GetValueOrDefault())
+            {
+                query = query.Include(r => r.Associates)
+                    .AsNoTracking();
+            }
+            if (includeLocations.GetValueOrDefault())
+            {
+                var t = query.Include(r => r.Locations);
+                query = t.AsNoTracking();
+                if(includeLocationOwners.GetValueOrDefault())
+                {
+                    query = t.ThenInclude(l => l.Owners)
+                        .AsNoTracking();
+                }
+            }
+
+            var l = await query.ToListAsync()
+                .ConfigureAwait(false);
+            return l;
+        }
+
+        [Authorize()]
+        [HttpGet("requests/{requestId}")]
+        public async Task<ActionResult<CompanyRegistrationRequest>> Get([FromRoute] Guid requestId,
+            [FromQuery] Boolean? includeAssociates = true,
+            [FromQuery] Boolean? includeLocations = true, [FromQuery] Boolean? includeLocationOwners = true)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = User.GetSubjectId();
+            var r = await  this._companyRegistrationManager
+                .FindCompanyRegistrationRequestAsync(requestId,
+                includeAssociates: includeAssociates.GetValueOrDefault(),
+                includeLocations: includeLocations.GetValueOrDefault(), includeLocationsOwners: includeLocationOwners.GetValueOrDefault())
+                .ConfigureAwait(false);
+          
+            if (null == r)
+                return NotFound();
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(r.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
+                return Forbid();
+
+            return r;
         }
 
         [HttpPost("requests")]
@@ -160,11 +254,12 @@ namespace IT.DigitalCompany.Controllers.Api
             request ??= new CompanyRegistrationRequest();
 
             var userId = request.UserId;
-            if(String.IsNullOrWhiteSpace(userId))
+            var subjectId = User.GetSubjectId();
+            if (String.IsNullOrWhiteSpace(userId))
             {
-                userId = request.UserId = this.User.GetSubjectId();
+                userId = request.UserId = subjectId;
             }
-            if(!String.Equals(userId,request.UserId,StringComparison.OrdinalIgnoreCase))
+            if(!String.Equals(userId,subjectId,StringComparison.OrdinalIgnoreCase))
             {
                 ModelState.AddModelError(nameof(request.UserId), "UserId is not equal with SubjetId");
                 return BadRequest(ModelState);

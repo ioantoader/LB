@@ -17,10 +17,14 @@ export class CompanyContactComponent implements OnInit, OnDestroy {
     private _companyRequestService: CompanyRequestService,
     private _router: Router,
     private _route: ActivatedRoute) {
-    const c = _companyRequestService.companyRequest?.contact;
-    this.contactFormGroup = fb.group({
-      'phoneNumber': [c?.phoneNumber],
-      'email': [c?.email]
+    _companyRequestService.companyRequest$.subscribe(r => {
+      if (r) {
+        const c = r?.contact;
+        this.contactFormGroup = fb.group({
+          'phoneNumber': [c?.phoneNumber],
+          'email': [c?.email]
+        });
+      }
     });
    }
   ngOnDestroy() {

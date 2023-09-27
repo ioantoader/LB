@@ -31,6 +31,12 @@ export class DataService {
     const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${companyId}/locations`;
     return firstValueFrom(this._httpClient.post<CompanyLocation>(uri, location));
   }
+
+  public updateLocation(location: CompanyLocation): Promise<CompanyLocation> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/locations`;
+    return firstValueFrom(this._httpClient.put<CompanyLocation>(uri, location));
+  }
+
   /*
   public updateCompanyRequest(companyRequest: CompanyRequest): Promise<CompanyRequest> {
     console.error(companyRequest);
@@ -49,7 +55,16 @@ export class DataService {
     const uri = `${this.baseUrl}/api/CompanyRegistration/requests`;
     return firstValueFrom(this._httpClient.post<CompanyRequest>(uri, null));
   }
-  
+
+  public getCompanyRegistrationRequest(requestId: string): Promise<CompanyRequest> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${requestId}`;
+    return firstValueFrom(this._httpClient.get<CompanyRequest>(uri));
+  }
+
+  public getCompanyRegistrationRequests(): Promise<CompanyRequest[]> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests`;
+    return firstValueFrom(this._httpClient.get<CompanyRequest[]>(uri));
+  }
 }
 
 
