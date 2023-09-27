@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 using IT.DigitalCompany.Data;
 using IT.DigitalCompany.Models;
 using IT.DigitalCompany.Infrastructure;
-using System.Collections.ObjectModel;
 using IT.DigitalCompany.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using IdentityModel;

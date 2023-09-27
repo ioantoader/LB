@@ -1,4 +1,7 @@
-﻿namespace IT.DigitalCompany.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.Runtime.InteropServices;
+
+namespace IT.DigitalCompany.Models
 {
     public class Address
     {

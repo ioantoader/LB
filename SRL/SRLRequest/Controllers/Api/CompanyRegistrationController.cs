@@ -54,7 +54,7 @@ namespace IT.DigitalCompany.Controllers.Api
         [Authorize()]
         [HttpPost("requests/{companyRequestId}/associates")]
         public async Task<ActionResult<Person>> PostAssociate([FromRoute] Guid companyRequestId,
-            [FromBody] Person person)
+            [FromBody][Bind()] Person person)
         {
             if (!ModelState.IsValid)
             {
