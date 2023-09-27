@@ -31,7 +31,8 @@ namespace IT.DigitalCompany.Data
 
             var contactEntity = companyRequestEntity.OwnsOne(p => p.Contact);
 
-            OnContactModelCreating(modelBuilder, contactEntity);
+            OnContactModelCreating(modelBuilder, contactEntity,
+                firstNameRequiered: false, lastNameRequiered: false);
 
             companyRequestEntity.HasMany(e => e.Associates)
                 .WithMany()
@@ -54,15 +55,18 @@ namespace IT.DigitalCompany.Data
 
         }
 
-        protected void OnContactModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, Contact> contactEntity)
+        protected void OnContactModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, Contact> contactEntity,
+            Boolean firstNameRequiered, Boolean lastNameRequiered)
             where TOwner : class
         {
             const string prefix = nameof(Contact);
             contactEntity.Property(p => p.FirstName)
-                .HasColumnName($"{prefix}_{nameof(Contact.FirstName)}");
+                .HasColumnName($"{prefix}_{nameof(Contact.FirstName)}")
+                .IsRequired(firstNameRequiered);
 
             contactEntity.Property(p => p.LastName)
-                .HasColumnName($"{prefix}_{nameof(Contact.LastName)}");
+                .HasColumnName($"{prefix}_{nameof(Contact.LastName)}")
+                .IsRequired(lastNameRequiered);
 
             contactEntity.Property(p => p.PhoneNumber)
                 .HasColumnName($"{prefix}_{nameof(Contact.PhoneNumber)}");
@@ -123,49 +127,67 @@ namespace IT.DigitalCompany.Data
 
         }
 
-        protected void OnAddressModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, Address> addressEntity)
+        protected void OnAddressModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, Address> addressEntity,
+            Action<PropertyBuilder>? configure)
             where TOwner : class
         {
             const string prefix = nameof(Address);
+            configure?.Invoke(
             addressEntity.Property(p => p.Country)
                 .HasColumnName($"{prefix}_{nameof(Address.Country)}")
-                .IsRequired();
+                .IsRequired()
+                );
 
+            configure?.Invoke(
             addressEntity.Property(p => p.City)
                 .HasColumnName($"{prefix}_{nameof(Address.City)}")
-                .IsRequired();
+                .IsRequired()
+                );
 
-            addressEntity.Property(p => p.PostalCode)
+            configure?.Invoke(addressEntity.Property(p => p.PostalCode)
                 .HasColumnName($"{prefix}_{nameof(Address.PostalCode)}")
-                .IsRequired();
+                .IsRequired()
+                );
 
+            configure?.Invoke(
             addressEntity.Property(p => p.Number)
                 .HasColumnName($"{prefix}_{nameof(Address.Number)}")
-                .IsRequired();
-
+                .IsRequired()
+                );
+            configure?.Invoke(
             addressEntity.Property(p => p.Street)
                 .HasColumnName($"{prefix}_{nameof(Address.Street)}")
-                .IsRequired();
+                .IsRequired()
+            );
 
+            configure?.Invoke(
             addressEntity.Property(p => p.State)
                 .HasColumnName($"{prefix}_{nameof(Address.State)}")
-                .IsRequired(false);
+                .IsRequired(false)
+                );
 
+            configure?.Invoke(
             addressEntity.Property(p => p.Block)
                 .HasColumnName($"{prefix}_{nameof(Address.Block)}")
-                .IsRequired(false);
+                .IsRequired(false)
+                );
 
+            configure?.Invoke(
             addressEntity.Property(p => p.Stair)
                 .HasColumnName($"{prefix}_{nameof(Address.Stair)}")
-                .IsRequired(false);
+                .IsRequired(false)
+                );
 
+            configure?.Invoke(
             addressEntity.Property(p => p.Floor)
                 .HasColumnName($"{prefix}_{nameof(Address.Floor)}")
-                .IsRequired(false);
-
+                .IsRequired(false)
+                );
+            configure?.Invoke(
             addressEntity.Property(p => p.Apartment)
                 .HasColumnName($"{prefix}_{nameof(Address.Apartment)}")
-                .IsRequired(false);
+                .IsRequired(false)
+                );
 
         }
 
@@ -199,13 +221,14 @@ namespace IT.DigitalCompany.Data
                 .IsRequired(false);
 
             var contactEntity = associateEntity.OwnsOne(p => p.Contact);
-            OnContactModelCreating(modelBuilder, contactEntity);
+            OnContactModelCreating(modelBuilder, contactEntity,
+                firstNameRequiered: true, lastNameRequiered: true);
 
             var identityDocumentEntity = associateEntity.OwnsOne(p => p.IdentityDocument);
             OnIdentityDocumentModelCreating(modelBuilder, identityDocumentEntity);
             
             var addressEntity = associateEntity.OwnsOne(p => p.Address);
-            OnAddressModelCreating(modelBuilder, addressEntity);
+            OnAddressModelCreating(modelBuilder, addressEntity, null);
 
             associateEntity.HasKey(p => p.Id);
             return associateEntity;
@@ -219,7 +242,7 @@ namespace IT.DigitalCompany.Data
                 .IsRequired();
 
             var addressEntity = companyLocationEntity.OwnsOne(p => p.Address);
-            OnAddressModelCreating(modelBuilder, addressEntity);
+            OnAddressModelCreating(modelBuilder, addressEntity,null);
 
             var contractEntity = companyLocationEntity.OwnsOne(p => p.Contract);
             OnCompanyLocationContractModelCreating(modelBuilder, contractEntity);
