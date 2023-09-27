@@ -62,17 +62,17 @@ export class CompanyRequestService {
     const requestId = (await this.currentCompanyRequest())?.id!;
     this.setCompanyRequest(await this._dataService.updateContact(requestId, value));
   }
-  public async addAssociate(associateData: PersonData): Promise<PersonData> {
+  public async addAssociate(associate: PersonData): Promise<PersonData> {
     const requestId = (await this.currentCompanyRequest())?.id!;
-    const p = await this._dataService.addAssociate(requestId, associateData);
+    associate = await this._dataService.addAssociate(requestId, associate);
 
     const companyRequest = await this.currentCompanyRequest();
     let associates = companyRequest.associates;
     if (!associates) {
       associates = companyRequest.associates = [];
     }
-    associates.push(p);
-    return p;
+    associates.push(associate);
+    return associate;
   }
 
   public async updateAssociate(associateData: PersonData): Promise<PersonData> {    
@@ -101,14 +101,30 @@ export class CompanyRequestService {
   public async addLocation(location: CompanyLocation): Promise<CompanyLocation> {
     const companyRequest = await this.currentCompanyRequest();
     const requestId = companyRequest?.id!
-    const p = await this._dataService.addLocation(requestId, location);
+    location = await this._dataService.addLocation(requestId, location);
     let locations = companyRequest.locations;
     if (!locations) {
       locations = companyRequest.locations = [];
     }
-    locations.push(p);
-    return p;
+    locations.push(location);
+    return location;
   }
+
+  public async updateLocation(location: CompanyLocation): Promise<CompanyLocation> {
+    const companyRequest = await this.currentCompanyRequest();
+    location = await this._dataService.updateLocation(location);
+    let locations = companyRequest.locations;
+    if (!locations) {
+      locations = companyRequest.locations = [];
+    }
+    const idx = locations.findIndex(l => l.id?.toUpperCase() === location.id)
+    if (idx >= 0) {
+      locations[idx] = location;
+    }
+
+    return location;
+  }
+
 
   public gotoCompanyAssociates(router: Router, route: ActivatedRoute) {
     router.navigate([this.steps[1].routerLink], { relativeTo: route.parent });

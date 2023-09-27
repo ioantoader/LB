@@ -82,17 +82,18 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
       owners: [o as PersonData]
 
     };
-    location = await this.openLocationDialog(location);
-    if (location) {
-      await this._companyRequestService.addLocation(location)
-      this.locations = this.locations.concat(location);
+    let newLocation = await this.openLocationDialog(location);
+    if (newLocation) {
+      newLocation = await this._companyRequestService.addLocation(newLocation)
+      this.locations = this.locations.concat(newLocation);
     }
   }
 
   public async editLoaction(location: CompanyLocation) {
-    const editLocation = await this.openLocationDialog(location);
-    if(editLocation) {
-      const idx = this.locations.findIndex(l => l.id?.toUpperCase() === location.id?.toUpperCase());
+    let editLocation = await this.openLocationDialog(location);
+    if (editLocation) {
+      editLocation = await this._companyRequestService.addLocation(editLocation)
+      const idx = this.locations.findIndex(l => l.id?.toUpperCase() === editLocation!.id?.toUpperCase());
       if(idx >= 0) {
         this.locations[idx] = editLocation;
         this.locations = [...this.locations];

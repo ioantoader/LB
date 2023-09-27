@@ -20,7 +20,6 @@ export class SRLCompanyRequestComponent implements OnInit {
     private _auth: AuthorizeService) {
     this.items = _companyRegisterRequestService.steps;
     this.loadCompanyRegistrationRequest();
-    console.error('enter');
   }
 
   async ngOnInit() {    

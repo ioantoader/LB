@@ -70,10 +70,10 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
       }
     };
 
-    let associateData = await this.openAssociateDialog(<PersonData>p);
-    if (associateData) {
-      associateData = await this._companyRequestService.addAssociate(associateData);
-      this.associates.push(new AssociateGridViewModel(associateData));
+    let newAssociate = await this.openAssociateDialog(<PersonData>p);
+    if (newAssociate) {
+      newAssociate = await this._companyRequestService.addAssociate(newAssociate);
+      this.associates.push(new AssociateGridViewModel(newAssociate));
       this.associates = [...this.associates];
     }
   }
@@ -94,11 +94,11 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
   }
 
   public async editAssociate(associate: AssociateGridViewModel): Promise<void> {
-    let associateData = await this.openAssociateDialog(associate.underlyingData);
-    if (associateData) {
-      associateData = await this._companyRequestService.updateAssociate(associateData);
-      const idx = this.associates.findIndex(a => a?.underlyingData?.id?.toUpperCase() === associateData!.id?.toUpperCase());
-      const associate = new AssociateGridViewModel(associateData)
+    let editAssociate = await this.openAssociateDialog(associate.underlyingData);
+    if (editAssociate) {
+      editAssociate = await this._companyRequestService.updateAssociate(editAssociate);
+      const idx = this.associates.findIndex(a => a?.underlyingData?.id?.toUpperCase() === editAssociate!.id?.toUpperCase());
+      associate = new AssociateGridViewModel(editAssociate)
       if(idx >= 0) {
         this.associates[idx] = associate;
       } else {
