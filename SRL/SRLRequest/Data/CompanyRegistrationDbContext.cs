@@ -15,7 +15,7 @@ namespace IT.DigitalCompany.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-
+            var a = OnAddressModelCreating(modelBuilder);
             var p = OnPersonModelCreating(modelBuilder);
             OnCompanyLocationModelCreating(modelBuilder);
             var cr = OnCompanyRegistrationRequestsModelCreating(modelBuilder);
@@ -127,70 +127,114 @@ namespace IT.DigitalCompany.Data
 
         }
 
-        protected void OnAddressModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, Address> addressEntity,
-            Action<PropertyBuilder>? configure)
-            where TOwner : class
+        protected EntityTypeBuilder<Address> OnAddressModelCreating(ModelBuilder modelBuilder)
         {
-            const string prefix = nameof(Address);
-            configure?.Invoke(
+            const String? prefix = null; //nameof(Address);
+            var addressEntity = modelBuilder.Entity<Address>()
+                .ToTable("Address");
+            addressEntity.Property(p => p.Id)
+                .IsRequired(true);
+
             addressEntity.Property(p => p.Country)
-                .HasColumnName($"{prefix}_{nameof(Address.Country)}")
-                .IsRequired()
-                );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Country)))
+                .IsRequired();
 
-            configure?.Invoke(
             addressEntity.Property(p => p.City)
-                .HasColumnName($"{prefix}_{nameof(Address.City)}")
-                .IsRequired()
-                );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.City)))
+                .IsRequired();
 
-            configure?.Invoke(addressEntity.Property(p => p.PostalCode)
-                .HasColumnName($"{prefix}_{nameof(Address.PostalCode)}")
-                .IsRequired()
-                );
+            addressEntity.Property(p => p.PostalCode)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.PostalCode)))
+                .IsRequired();
 
-            configure?.Invoke(
             addressEntity.Property(p => p.Number)
-                .HasColumnName($"{prefix}_{nameof(Address.Number)}")
-                .IsRequired()
-                );
-            configure?.Invoke(
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Number)))
+                .IsRequired();
+
             addressEntity.Property(p => p.Street)
-                .HasColumnName($"{prefix}_{nameof(Address.Street)}")
-                .IsRequired()
-            );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Street)))
+                .IsRequired();
 
-            configure?.Invoke(
             addressEntity.Property(p => p.State)
-                .HasColumnName($"{prefix}_{nameof(Address.State)}")
-                .IsRequired(false)
-                );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.State)))
+                .IsRequired(false);
 
-            configure?.Invoke(
+
             addressEntity.Property(p => p.Block)
-                .HasColumnName($"{prefix}_{nameof(Address.Block)}")
-                .IsRequired(false)
-                );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Block)))
+                .IsRequired(false);
 
-            configure?.Invoke(
             addressEntity.Property(p => p.Stair)
-                .HasColumnName($"{prefix}_{nameof(Address.Stair)}")
-                .IsRequired(false)
-                );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Stair)))
+                .IsRequired(false);
 
-            configure?.Invoke(
             addressEntity.Property(p => p.Floor)
-                .HasColumnName($"{prefix}_{nameof(Address.Floor)}")
-                .IsRequired(false)
-                );
-            configure?.Invoke(
-            addressEntity.Property(p => p.Apartment)
-                .HasColumnName($"{prefix}_{nameof(Address.Apartment)}")
-                .IsRequired(false)
-                );
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Floor)))
+                .IsRequired(false);
 
+            addressEntity.Property(p => p.Apartment)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Apartment)))
+                .IsRequired(false);
+
+            addressEntity.HasKey(p => p.Id);
+
+            return addressEntity;
         }
 
+        /*
+        protected void OnAddressModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, Address> addressEntity)
+            where TOwner : class
+        {
+            const String? prefix = null; //nameof(Address);
+
+            addressEntity.Property(p => p.Id)
+                .IsRequired(true);
+
+            addressEntity.Property(p => p.Country)
+                .HasColumnName(ComputeColumnName(prefix,nameof(Address.Country)))
+                .IsRequired();
+
+            addressEntity.Property(p => p.City)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.City)))
+                .IsRequired();
+
+            addressEntity.Property(p => p.PostalCode)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.PostalCode)))
+                .IsRequired();
+
+            addressEntity.Property(p => p.Number)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Number)))
+                .IsRequired();
+
+            addressEntity.Property(p => p.Street)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Street)))
+                .IsRequired();
+
+            addressEntity.Property(p => p.State)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.State)))
+                .IsRequired(false);
+
+
+            addressEntity.Property(p => p.Block)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Block)))
+                .IsRequired(false);
+
+            addressEntity.Property(p => p.Stair)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Stair)))
+                .IsRequired(false);
+
+            addressEntity.Property(p => p.Floor)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Floor)))
+                .IsRequired(false);
+
+            addressEntity.Property(p => p.Apartment)
+                .HasColumnName(ComputeColumnName(prefix, nameof(Address.Apartment)))
+                .IsRequired(false);
+
+            addressEntity.HasKey(p => p.Id);
+
+        }
+        */
         protected void OnCompanyLocationContractModelCreating<TOwner>(ModelBuilder modelBuilder, OwnedNavigationBuilder<TOwner, CompanyLocationContract> companyLocationContractEntity)
             where TOwner : class
         {
@@ -201,37 +245,48 @@ namespace IT.DigitalCompany.Data
 
             companyLocationContractEntity.Property(p => p.MonthlyRental)
                 .HasColumnName($"{prefix}_{nameof(CompanyLocationContract.MonthlyRental)}")
+                .HasPrecision(18,2)
                 .IsRequired(false);
 
             companyLocationContractEntity.Property(p => p.RentalDeposit)
                 .HasColumnName($"{prefix}_{nameof(CompanyLocationContract.RentalDeposit)}")
+                .HasPrecision(18,2)
                 .IsRequired(false);
 
         }
 
         protected EntityTypeBuilder<Person> OnPersonModelCreating(ModelBuilder modelBuilder)
         {
-            var associateEntity = modelBuilder.Entity<Person>()
+            var personEntity = modelBuilder.Entity<Person>()
                 .ToTable("Persons");                
 
-            associateEntity.Property(p => p.Id)
+            personEntity.Property(p => p.Id)
                 .IsRequired();
-            associateEntity.Property(p => p.Type);
-            associateEntity.Property(p => p.CRN)
+            personEntity.Property(p => p.Type);
+            personEntity.Property(p => p.CRN)
                 .IsRequired(false);
 
-            var contactEntity = associateEntity.OwnsOne(p => p.Contact);
+            var contactEntity = personEntity.OwnsOne(p => p.Contact);
             OnContactModelCreating(modelBuilder, contactEntity,
                 firstNameRequiered: true, lastNameRequiered: true);
 
-            var identityDocumentEntity = associateEntity.OwnsOne(p => p.IdentityDocument);
+            var identityDocumentEntity = personEntity.OwnsOne(p => p.IdentityDocument);
             OnIdentityDocumentModelCreating(modelBuilder, identityDocumentEntity);
+            personEntity.Property<Guid?>("AddressId");
+            personEntity.HasOne(p => p.Address)
+                .WithOne()
+                .HasForeignKey<Person>("AddressId")
+                .OnDelete(DeleteBehavior.Cascade);
+                /*, builder =>
+            {
+                builder.ToTable("Addresses");
+                builder.WithOwner().HasForeignKey("AddressId");
+                OnAddressModelCreating(modelBuilder, builder);
+            });*/
             
-            var addressEntity = associateEntity.OwnsOne(p => p.Address);
-            OnAddressModelCreating(modelBuilder, addressEntity, null);
 
-            associateEntity.HasKey(p => p.Id);
-            return associateEntity;
+            personEntity.HasKey(p => p.Id);
+            return personEntity;
         }
 
         protected EntityTypeBuilder<CompanyLocation> OnCompanyLocationModelCreating(ModelBuilder modelBuilder)
@@ -241,8 +296,19 @@ namespace IT.DigitalCompany.Data
             companyLocationEntity.Property(p => p.Id)
                 .IsRequired();
 
-            var addressEntity = companyLocationEntity.OwnsOne(p => p.Address);
-            OnAddressModelCreating(modelBuilder, addressEntity,null);
+            companyLocationEntity.Property<Guid>("AddressId");
+            companyLocationEntity.HasOne(p => p.Address)
+                .WithOne()
+                .HasForeignKey<CompanyLocation>("AddressId")
+                .OnDelete(DeleteBehavior.NoAction);
+                //.OnDelete(DeleteBehavior.NoAction);
+            
+            /*, builder =>
+            {
+                builder.ToTable("Addresses");
+                builder.WithOwner().HasForeignKey("AddressId");
+                OnAddressModelCreating(modelBuilder, builder);
+            });*/
 
             var contractEntity = companyLocationEntity.OwnsOne(p => p.Contract);
             OnCompanyLocationContractModelCreating(modelBuilder, contractEntity);
@@ -259,5 +325,9 @@ namespace IT.DigitalCompany.Data
         }
         public DbSet<CompanyRegistrationRequest> CompanyRegistrationRequests { get; set; }
 
+        private String ComputeColumnName(String? prefix, String columnName)
+        {
+            return String.IsNullOrWhiteSpace(prefix) ? columnName : $"{prefix}_{columnName}";
+        }
     }
 }

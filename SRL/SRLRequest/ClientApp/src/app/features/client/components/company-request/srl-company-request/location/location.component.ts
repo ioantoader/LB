@@ -30,6 +30,7 @@ export class LocationComponent implements OnInit, OnDestroy {
       'id': [this.location?.id],
       'address': fb.group(
         {
+          'id': this.location?.address?.id,
           'country': this.location?.address?.country,
           'state': this.location?.address?.state,
           'city': this.location?.address?.city,
@@ -115,10 +116,18 @@ export class LocationComponent implements OnInit, OnDestroy {
     if (t.id === null) {
       t.id = undefined;
     }
+    const locationAddress = t.address;
+    if (locationAddress && (locationAddress.id === null)) {
+      locationAddress.id = undefined;
+    }
     const owners = this.locationOwners ?? [];
     owners.forEach(o => {
       if (o.id?.startsWith('_') ?? false) {
         o.id = undefined;
+      }
+      const ownerAddress = o.address;
+      if (ownerAddress && (null === ownerAddress.id)) {
+        ownerAddress.id = undefined;
       }
     });
     t.owners = owners;

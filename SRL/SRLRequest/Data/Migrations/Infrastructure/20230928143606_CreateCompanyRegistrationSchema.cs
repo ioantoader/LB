@@ -12,27 +12,24 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "CompanyLocations",
+                name: "Address",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_State = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Block = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Stair = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Apartment = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CompanyLocationContract_DurationInYears = table.Column<int>(type: "int", nullable: false),
-                    CompanyLocationContract_MonthlyRental = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
-                    CompanyLocationContract_RentalDeposit = table.Column<decimal>(type: "decimal(18,2)", nullable: true)
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Block = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Stair = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Apartment = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CompanyLocations", x => x.Id);
+                    table.PrimaryKey("PK_Address", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,14 +49,34 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 });
 
             migrationBuilder.CreateTable(
+                name: "CompanyLocations",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CompanyLocationContract_DurationInYears = table.Column<int>(type: "int", nullable: false),
+                    CompanyLocationContract_MonthlyRental = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true),
+                    CompanyLocationContract_RentalDeposit = table.Column<decimal>(type: "decimal(18,2)", precision: 18, scale: 2, nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CompanyLocations", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CompanyLocations_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Type = table.Column<int>(type: "int", nullable: false),
                     CRN = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Contact_FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Contact_LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Contact_FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Contact_LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Contact_Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Contact_PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ID_DocumentType = table.Column<int>(type: "int", nullable: false),
@@ -74,20 +91,17 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                     ID_ExpirationDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
                     ID_IssueBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ID_BirthDate = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    Address_Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_PostalCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_Number = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_Street = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Address_State = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Block = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Stair = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Floor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address_Apartment = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    AddressId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Persons", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Persons_Address_AddressId",
+                        column: x => x.AddressId,
+                        principalTable: "Address",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -168,6 +182,12 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CompanyLocations_AddressId",
+                table: "CompanyLocations",
+                column: "AddressId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CompanyRegistrationRequestAssociates_AssociateId",
                 table: "CompanyRegistrationRequestAssociates",
                 column: "AssociateId");
@@ -176,6 +196,13 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                 name: "IX_CompanyRegistrationRequestLocations_LocationId",
                 table: "CompanyRegistrationRequestLocations",
                 column: "LocationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_AddressId",
+                table: "Persons",
+                column: "AddressId",
+                unique: true,
+                filter: "[AddressId] IS NOT NULL");
         }
 
         /// <inheritdoc />
@@ -198,6 +225,9 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
             migrationBuilder.DropTable(
                 name: "CompanyRegistrationRequests");
+
+            migrationBuilder.DropTable(
+                name: "Address");
         }
     }
 }

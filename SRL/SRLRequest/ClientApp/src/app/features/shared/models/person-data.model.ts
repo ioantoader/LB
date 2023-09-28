@@ -8,5 +8,5 @@ export interface PersonData {
   id?:                string;
   contact:            Contact;
   identityDocument:   IDCard;
-  address:            Address;
+  address?:           Address;
 }

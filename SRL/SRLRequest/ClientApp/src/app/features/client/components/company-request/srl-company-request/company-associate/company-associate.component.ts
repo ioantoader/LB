@@ -38,6 +38,7 @@ export class CompanyAssociateComponent implements OnInit {
           }),
           'address': fb.group(
             {
+              'id':         [this._associateData?.address?.id],
               'country':    [this._associateData?.address?.country],
               'state':      [this._associateData?.address?.state],
               'city':       [this._associateData?.address?.city],
@@ -61,6 +62,10 @@ export class CompanyAssociateComponent implements OnInit {
     const a: PersonData = this.associateDataFormGroup.value;
     if (a.id === null) {
       a.id = undefined;
+    }
+    const address = a.address;
+    if (address && (null == address.id)) {
+      address.id = undefined;
     }
     this._associateData = a;
     this._dialogRef.close(this._associateData);

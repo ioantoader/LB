@@ -20,7 +20,7 @@ namespace IT.DigitalCompany.Models
         public Contact Contact { get; set; } = new Contact();
 
         public IdentityDocument IdentityDocument { get; set; } = new IdentityDocument();
-        public Address Address { get; set; } = new Address();
+        public Address? Address { get; set; }
 
         [NotMapped]
         [System.Text.Json.Serialization.JsonIgnore]

@@ -67,13 +67,75 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                     b.ToTable("CompanyRegistrationRequestLocations");
                 });
 
+            modelBuilder.Entity("IT.DigitalCompany.Models.Address", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Apartment")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Apartment");
+
+                    b.Property<string>("Block")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Block");
+
+                    b.Property<string>("City")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("City");
+
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Country");
+
+                    b.Property<string>("Floor")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Floor");
+
+                    b.Property<string>("Number")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Number");
+
+                    b.Property<string>("PostalCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("PostalCode");
+
+                    b.Property<string>("Stair")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Stair");
+
+                    b.Property<string>("State")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("State");
+
+                    b.Property<string>("Street")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("Street");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Address", (string)null);
+                });
+
             modelBuilder.Entity("IT.DigitalCompany.Models.CompanyLocation", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("AddressId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique();
 
                     b.ToTable("CompanyLocations", (string)null);
                 });
@@ -99,6 +161,9 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AddressId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<string>("CRN")
                         .HasColumnType("nvarchar(max)");
 
@@ -106,6 +171,10 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AddressId")
+                        .IsUnique()
+                        .HasFilter("[AddressId] IS NOT NULL");
 
                     b.ToTable("Persons", (string)null);
                 });
@@ -157,63 +226,11 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
             modelBuilder.Entity("IT.DigitalCompany.Models.CompanyLocation", b =>
                 {
-                    b.OwnsOne("IT.DigitalCompany.Models.Address", "Address", b1 =>
-                        {
-                            b1.Property<Guid>("CompanyLocationId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Apartment")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Apartment");
-
-                            b1.Property<string>("Block")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Block");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_City");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Country");
-
-                            b1.Property<string>("Floor")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Floor");
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Number");
-
-                            b1.Property<string>("PostalCode")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_PostalCode");
-
-                            b1.Property<string>("Stair")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Stair");
-
-                            b1.Property<string>("State")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_State");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Street");
-
-                            b1.HasKey("CompanyLocationId");
-
-                            b1.ToTable("CompanyLocations");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CompanyLocationId");
-                        });
+                    b.HasOne("IT.DigitalCompany.Models.Address", "Address")
+                        .WithOne()
+                        .HasForeignKey("IT.DigitalCompany.Models.CompanyLocation", "AddressId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
 
                     b.OwnsOne("IT.DigitalCompany.Models.CompanyLocationContract", "Contract", b1 =>
                         {
@@ -225,10 +242,12 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                                 .HasColumnName("CompanyLocationContract_DurationInYears");
 
                             b1.Property<decimal?>("MonthlyRental")
+                                .HasPrecision(18, 2)
                                 .HasColumnType("decimal(18,2)")
                                 .HasColumnName("CompanyLocationContract_MonthlyRental");
 
                             b1.Property<decimal?>("RentalDeposit")
+                                .HasPrecision(18, 2)
                                 .HasColumnType("decimal(18,2)")
                                 .HasColumnName("CompanyLocationContract_RentalDeposit");
 
@@ -240,8 +259,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                                 .HasForeignKey("CompanyLocationId");
                         });
 
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("Address");
 
                     b.Navigation("Contract")
                         .IsRequired();
@@ -283,6 +301,11 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
             modelBuilder.Entity("IT.DigitalCompany.Models.Person", b =>
                 {
+                    b.HasOne("IT.DigitalCompany.Models.Address", "Address")
+                        .WithOne()
+                        .HasForeignKey("IT.DigitalCompany.Models.Person", "AddressId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.OwnsOne("IT.DigitalCompany.Models.IdentityDocument", "IdentityDocument", b1 =>
                         {
                             b1.Property<Guid>("PersonId")
@@ -346,64 +369,6 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                                 .HasForeignKey("PersonId");
                         });
 
-                    b.OwnsOne("IT.DigitalCompany.Models.Address", "Address", b1 =>
-                        {
-                            b1.Property<Guid>("PersonId")
-                                .HasColumnType("uniqueidentifier");
-
-                            b1.Property<string>("Apartment")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Apartment");
-
-                            b1.Property<string>("Block")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Block");
-
-                            b1.Property<string>("City")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_City");
-
-                            b1.Property<string>("Country")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Country");
-
-                            b1.Property<string>("Floor")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Floor");
-
-                            b1.Property<string>("Number")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Number");
-
-                            b1.Property<string>("PostalCode")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_PostalCode");
-
-                            b1.Property<string>("Stair")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Stair");
-
-                            b1.Property<string>("State")
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_State");
-
-                            b1.Property<string>("Street")
-                                .IsRequired()
-                                .HasColumnType("nvarchar(max)")
-                                .HasColumnName("Address_Street");
-
-                            b1.HasKey("PersonId");
-
-                            b1.ToTable("Persons");
-
-                            b1.WithOwner()
-                                .HasForeignKey("PersonId");
-                        });
-
                     b.OwnsOne("IT.DigitalCompany.Models.Contact", "Contact", b1 =>
                         {
                             b1.Property<Guid>("PersonId")
@@ -414,10 +379,12 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                                 .HasColumnName("Contact_Email");
 
                             b1.Property<string>("FirstName")
+                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Contact_FirstName");
 
                             b1.Property<string>("LastName")
+                                .IsRequired()
                                 .HasColumnType("nvarchar(max)")
                                 .HasColumnName("Contact_LastName");
 
@@ -433,8 +400,7 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                                 .HasForeignKey("PersonId");
                         });
 
-                    b.Navigation("Address")
-                        .IsRequired();
+                    b.Navigation("Address");
 
                     b.Navigation("Contact")
                         .IsRequired();

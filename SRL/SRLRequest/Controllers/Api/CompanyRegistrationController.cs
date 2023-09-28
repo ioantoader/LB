@@ -32,8 +32,11 @@ namespace IT.DigitalCompany.Controllers.Api
 
             var registationRequest = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId,
                 includeAssociates: true,
+                includeAssociateAddress: true,
                 includeLocations: true,
-                includeLocationsOwners: true)
+                includeLocationAddress: true,
+                includeLocationOwners: true,
+                includeLocationOwnerAddress: true)
                 .ConfigureAwait(false);
             if (null == registationRequest)
             {
@@ -151,8 +154,8 @@ namespace IT.DigitalCompany.Controllers.Api
         }
 
         [Authorize()]
-        [HttpPost("requests/locations")]
-        public async Task<ActionResult<CompanyLocation>> putLocation(
+        [HttpPut("requests/locations")]
+        public async Task<ActionResult<CompanyLocation>> PutLocation(
             [FromBody] CompanyLocation location)
         {
             if (!ModelState.IsValid)
@@ -172,18 +175,23 @@ namespace IT.DigitalCompany.Controllers.Api
             if (!String.Equals(r.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
                 return Forbid();
 
-            await this._companyRegistrationManager
+            location = await this._companyRegistrationManager
                 .UpdateRegistrationRequestLocationAsync(location)
                 .ConfigureAwait(false);
 
             return location;
 
         }
-        
+
         [Authorize()]
         [HttpGet("requests")]
-        public async Task<ActionResult<IEnumerable<CompanyRegistrationRequest>>> Get([FromQuery]Boolean? includeAssociates = true,
-            [FromQuery]Boolean? includeLocations = true, [FromQuery] Boolean? includeLocationOwners = true)
+        public async Task<ActionResult<IEnumerable<CompanyRegistrationRequest>>> Get(
+            [FromQuery] Boolean? includeAssociates = true,
+            [FromQuery] Boolean? includeAssociateAdresss = true,
+            [FromQuery] Boolean? includeLocations = true,
+            [FromQuery] Boolean? includeLocationAddress = true,
+            [FromQuery] Boolean? includeLocationOwners = true,
+            [FromQuery] Boolean? includeLocationOwnerAddres = true)
         {
             if (!ModelState.IsValid)
             {
@@ -196,18 +204,27 @@ namespace IT.DigitalCompany.Controllers.Api
                 .Where(r => r.UserId.Equals(subjectId));
             if (includeAssociates.GetValueOrDefault())
             {
-                query = query.Include(r => r.Associates)
-                    .AsNoTracking();
+                var t = query.Include(r => r.Associates);
+                query = t.AsNoTracking();
+                if(includeAssociateAdresss.GetValueOrDefault())
+                {
+                    query = t.ThenInclude(l => l.Address).AsNoTracking();
+                }
             }
             if (includeLocations.GetValueOrDefault())
             {
                 var t = query.Include(r => r.Locations);
                 query = t.AsNoTracking();
+                if(includeLocationOwnerAddres.GetValueOrDefault())
+                {
+                    query = t.ThenInclude(l => l.Address).AsNoTracking();
+                }
                 if(includeLocationOwners.GetValueOrDefault())
                 {
-                    query = t.ThenInclude(l => l.Owners)
+                    query = query.Include(r => r.Locations).ThenInclude(l => l.Owners)
                         .AsNoTracking();
                 }
+
             }
 
             var l = await query.ToListAsync()
@@ -219,7 +236,11 @@ namespace IT.DigitalCompany.Controllers.Api
         [HttpGet("requests/{requestId}")]
         public async Task<ActionResult<CompanyRegistrationRequest>> Get([FromRoute] Guid requestId,
             [FromQuery] Boolean? includeAssociates = true,
-            [FromQuery] Boolean? includeLocations = true, [FromQuery] Boolean? includeLocationOwners = true)
+            [FromQuery] Boolean? includeAssociateAdresss = true,
+            [FromQuery] Boolean? includeLocations = true,
+            [FromQuery] Boolean? includeLocationAddress = true,
+            [FromQuery] Boolean? includeLocationOwners = true,
+            [FromQuery] Boolean? includeLocationOwnerAddres = true)
         {
             if (!ModelState.IsValid)
             {
@@ -230,7 +251,11 @@ namespace IT.DigitalCompany.Controllers.Api
             var r = await  this._companyRegistrationManager
                 .FindCompanyRegistrationRequestAsync(requestId,
                 includeAssociates: includeAssociates.GetValueOrDefault(),
-                includeLocations: includeLocations.GetValueOrDefault(), includeLocationsOwners: includeLocationOwners.GetValueOrDefault())
+                includeAssociateAddress: includeAssociateAdresss.GetValueOrDefault(),
+                includeLocations: includeLocations.GetValueOrDefault(),
+                includeLocationAddress: includeLocationAddress.GetValueOrDefault(),
+                includeLocationOwners: includeLocationOwners.GetValueOrDefault(),
+                includeLocationOwnerAddress: includeLocationOwnerAddres.GetValueOrDefault())
                 .ConfigureAwait(false);
           
             if (null == r)

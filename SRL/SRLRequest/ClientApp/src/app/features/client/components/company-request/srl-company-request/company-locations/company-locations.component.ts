@@ -67,7 +67,6 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
     }
 
     let o: Partial<PersonData> = {
-      address: <Address>a,
       contact: {
         email: 'ioan.toader@gmail.com',
         phoneNumber: '01739656754',
@@ -92,7 +91,7 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
   public async editLoaction(location: CompanyLocation) {
     let editLocation = await this.openLocationDialog(location);
     if (editLocation) {
-      editLocation = await this._companyRequestService.addLocation(editLocation)
+      editLocation = await this._companyRequestService.updateLocation(editLocation)
       const idx = this.locations.findIndex(l => l.id?.toUpperCase() === editLocation!.id?.toUpperCase());
       if(idx >= 0) {
         this.locations[idx] = editLocation;
