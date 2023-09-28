@@ -74,8 +74,13 @@ namespace IT.DigitalCompany.Infrastructure
         {
             if (null == person) throw new ArgumentNullException(nameof(person));
 
+            this.Persons.Attach(person);
             var address = person.Address;
             AddOrUpdateAddress(address);
+            Context.Attach(person.IdentityDocument);
+            Context.Update(person.IdentityDocument);
+            Context.Attach(person.Contact);
+            Context.Update(person.Contact);
             this.Persons.Update(person);
             await this.Context.SaveChangesAsync()
                 .ConfigureAwait(false);
@@ -138,8 +143,7 @@ namespace IT.DigitalCompany.Infrastructure
         {
             if (null != address)
             {
-                Addresses.Update(address);
-                /*
+                
                 if (address.IsNew)
                 {
                     Addresses.Add(address);
@@ -147,7 +151,7 @@ namespace IT.DigitalCompany.Infrastructure
                 else
                 {
                     Addresses.Update(address);
-                }*/
+                }
             }
 
         }
@@ -165,7 +169,15 @@ namespace IT.DigitalCompany.Infrastructure
                 throw new KeyNotFoundException();
 
             Locations.Entry(dbLocation).CurrentValues.SetValues(companyLocation);
-            dbLocation.Contract = companyLocation.Contract;
+            var dbContract = dbLocation.Contract;
+            if (null != dbContract)
+            {
+                Context.Entry(dbContract).CurrentValues.SetValues(companyLocation.Contract);
+            }
+            else
+            {
+                dbLocation.Contract = new CompanyLocationContract();
+            }
 
     
             var dbAddress = dbLocation.Address?? new Address();
@@ -192,8 +204,25 @@ namespace IT.DigitalCompany.Infrastructure
                 else
                 {
                     Persons.Entry(dbOwner).CurrentValues.SetValues(newOwner);
-                    dbOwner.Contact = newOwner.Contact;
-                    dbOwner.IdentityDocument = newOwner.IdentityDocument;
+                    var dbContact = dbOwner.Contact;
+                    if(null != dbContact)
+                    {
+                        Context.Entry(dbContact).CurrentValues.SetValues(newOwner.Contact);
+
+                    }
+                    else 
+                    { 
+                        dbOwner.Contact = new Contact();
+                    }
+                    var dbIdentityDocument = dbOwner.IdentityDocument;
+                    if (null != dbIdentityDocument)
+                    {
+                        Context.Entry(dbIdentityDocument).CurrentValues.SetValues(newOwner.IdentityDocument);
+                    }
+                    else
+                    {
+                        dbOwner.IdentityDocument = new IdentityDocument();
+                    }
 
                 }
                 var dbOwnerAddress = dbOwner?.Address;
