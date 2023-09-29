@@ -5,6 +5,7 @@ import { CompanyRequest } from '../models/company-request.model';
 import { firstValueFrom } from 'rxjs';
 import { Contact } from '../models/contact.model';
 import { CompanyLocation } from '../models/company-location.model';
+import { CompanyNames } from '../models/companyNames.model';
 @Injectable()
 export class DataService {
   private baseUrl: string = '';
@@ -50,6 +51,13 @@ export class DataService {
 
     return firstValueFrom(this._httpClient.put<CompanyRequest>(uri, contact));
   }
+
+  public updateNames(requestId: string, names: CompanyNames): Promise<CompanyRequest> {
+    const uri = `${this.baseUrl}/api/CompanyRegistration/requests/${requestId}/names`;
+
+    return firstValueFrom(this._httpClient.put<CompanyRequest>(uri, names));
+  }
+
 
   public createCompanyRegistrationRequest(): Promise<CompanyRequest> {
     const uri = `${this.baseUrl}/api/CompanyRegistration/requests`;

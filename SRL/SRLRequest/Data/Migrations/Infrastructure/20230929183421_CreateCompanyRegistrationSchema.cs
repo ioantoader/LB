@@ -41,7 +41,10 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                     Contact_FirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Contact_LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Contact_Email = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Contact_PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Contact_PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Names_Name1 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Names_Name2 = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Names_Name3 = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {

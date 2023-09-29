@@ -573,6 +573,7 @@
 		<None Remove="ClientApp\.angular\cache\16.2.1\babel-webpack\fd81be8029e304ff63981a778a01923636119494d21766280911ddfcb9336599.json" />
 		<None Remove="ClientApp\.angular\cache\16.2.1\babel-webpack\ff540ea7459775999f02867f9470c171fcf13ad41dbe307ec2f1b2302380a0c8.json" />
 		<None Remove="ClientApp\src\app\features\shared\models\company-request.service.ts" />
+		<None Remove="ClientApp\src\app\features\shared\models\companyNames.model.ts" />
 	</ItemGroup>
 
 
@@ -585,6 +586,7 @@
 
 	<ItemGroup>
 		<TypeScriptCompile Include="ClientApp\src\app\features\shared\models\company-request.service.ts" />
+		<TypeScriptCompile Include="ClientApp\src\app\features\shared\models\companyNames.model.ts" />
 	</ItemGroup>
 
 	<Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

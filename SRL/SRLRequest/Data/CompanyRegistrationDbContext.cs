@@ -49,7 +49,17 @@ namespace IT.DigitalCompany.Data
                 configureJoinEntityType: j => j.HasKey(e => new { e.CompanyRegistationRequestId, e.LocationId })
                 );
 
-            
+            var companyNmaesEntity = companyRequestEntity.OwnsOne(e => e.Names);
+            companyNmaesEntity.Property(p => p.Name1).
+                HasColumnName($"Names_{nameof(CompanyNames.Name1)}")
+                .IsRequired(false);
+            companyNmaesEntity.Property(p => p.Name2).
+                HasColumnName($"Names_{nameof(CompanyNames.Name2)}")
+                .IsRequired(false);
+            companyNmaesEntity.Property(p => p.Name3).
+                HasColumnName($"Names_{nameof(CompanyNames.Name3)}")
+                .IsRequired(false);
+
             companyRequestEntity.HasKey(p => p.Id);
             return companyRequestEntity;
 

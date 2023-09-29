@@ -267,6 +267,31 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
 
             modelBuilder.Entity("IT.DigitalCompany.Models.CompanyRegistrationRequest", b =>
                 {
+                    b.OwnsOne("IT.DigitalCompany.Models.CompanyNames", "Names", b1 =>
+                        {
+                            b1.Property<Guid>("CompanyRegistrationRequestId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Name1")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Names_Name1");
+
+                            b1.Property<string>("Name2")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Names_Name2");
+
+                            b1.Property<string>("Name3")
+                                .HasColumnType("nvarchar(max)")
+                                .HasColumnName("Names_Name3");
+
+                            b1.HasKey("CompanyRegistrationRequestId");
+
+                            b1.ToTable("CompanyRegistrationRequests");
+
+                            b1.WithOwner()
+                                .HasForeignKey("CompanyRegistrationRequestId");
+                        });
+
                     b.OwnsOne("IT.DigitalCompany.Models.Contact", "Contact", b1 =>
                         {
                             b1.Property<Guid>("CompanyRegistrationRequestId")
@@ -297,6 +322,9 @@ namespace IT.DigitalCompany.Data.Migrations.Infrastructure
                         });
 
                     b.Navigation("Contact");
+
+                    b.Navigation("Names")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("IT.DigitalCompany.Models.Person", b =>

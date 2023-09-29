@@ -7,6 +7,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { PersonData } from "./person-data.model";
 import { CompanyLocation } from "./company-location.model";
 import { BehaviorSubject, Observable, firstValueFrom } from "rxjs";
+import { CompanyNames } from "./companyNames.model";
 
 @Injectable()
 export class CompanyRequestService {
@@ -61,6 +62,11 @@ export class CompanyRequestService {
   public async updateContact(value: Contact) {
     const requestId = (await this.currentCompanyRequest())?.id!;
     this.setCompanyRequest(await this._dataService.updateContact(requestId, value));
+  }
+
+  public async updateNames(value: CompanyNames) {
+    const requestId = (await this.currentCompanyRequest())?.id!;
+    this.setCompanyRequest(await this._dataService.updateNames(requestId, value));
   }
   public async addAssociate(associate: PersonData): Promise<PersonData> {
     const requestId = (await this.currentCompanyRequest())?.id!;
@@ -136,6 +142,14 @@ export class CompanyRequestService {
 
   public gotoCompanyLocations(router: Router, route: ActivatedRoute) {
     router.navigate([this.steps[2].routerLink], { relativeTo: route.parent });
+  }
+
+  public gotoCompanyActivities(router: Router, route: ActivatedRoute) {
+    router.navigate([this.steps[3].routerLink], { relativeTo: route.parent });
+  }
+
+  public gotoCompanyNames(router: Router, route: ActivatedRoute) {
+    router.navigate([this.steps[4].routerLink], { relativeTo: route.parent });
   }
 
 }

@@ -48,7 +48,22 @@ namespace IT.DigitalCompany.Infrastructure
                 .ConfigureAwait(false);
   
         }
-                       
+
+        public async Task UpdateRegistrationRequestNamesAsync(CompanyRegistrationRequest companyRegistrationRequest, CompanyNames names)
+        {
+            if (null == companyRegistrationRequest) throw new ArgumentNullException(nameof(companyRegistrationRequest));
+            if (null == names) throw new ArgumentNullException(nameof(names));
+
+            this.Context.CompanyRegistrationRequests.Attach(companyRegistrationRequest);
+
+            var cn = companyRegistrationRequest.Names ??= new CompanyNames();
+            cn.Name1 = names?.Name1;
+            cn.Name2 = names?.Name2;
+            cn.Name3 = names?.Name3;
+            await this.Context.SaveChangesAsync()
+                .ConfigureAwait(false);
+
+        }
 
         public async Task AddRegistrationRequestAssociateAsync(CompanyRegistrationRequest companyRegistrationRequest, Person person)
         {

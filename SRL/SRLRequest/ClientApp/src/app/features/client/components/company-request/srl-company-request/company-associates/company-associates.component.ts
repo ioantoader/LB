@@ -27,10 +27,8 @@ export class CompanyAssociatesComponent implements OnInit, OnDestroy {
     private _route: ActivatedRoute) {
 
     this._companyRequestService.companyRequest$.subscribe(r => {
-      if (r) {
         this.associates = (r?.associates ?? [])
           .map(a => new AssociateGridViewModel(a));
-      }
     });
   }
 

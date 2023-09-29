@@ -10,6 +10,8 @@ import { CompanyLocationsComponent } from './company-locations/company-locations
 import { CompanyContactComponent } from './company-contact/company-contact.component';
 import { CompanyAssociateComponent } from './company-associate/company-associate.component';
 import { CompanyAssociatesComponent } from './company-associates/company-associates.component';
+import { CompanyActivitiesComponent } from './company-activities/company-activities.component';
+import { SRLCompanyRequestNamesComponent } from './srl-company-request-names/srl-company-request-names.component';
 @NgModule({
   imports: [
     CommonModule,
@@ -27,6 +29,8 @@ import { CompanyAssociatesComponent } from './company-associates/company-associa
     CompanyLocationsComponent,
     LocationComponent,
     LocationOwnerComponent,
+    CompanyActivitiesComponent,
+    SRLCompanyRequestNamesComponent
   ]
 })
 export class SRLCompanyRequestModule { }

@@ -1,3 +1,34 @@
-<p>
-  create-srl-names works!
-</p>
+<form [formGroup]="namesFormGroup">
+    <div class="card p-fluid">
+        <h5>Numele Companiei</h5>
+
+        <div class="field col-12">
+            <span class="p-float-label">
+                <input pInputText id="name1" placeholder="Nume 1" formControlName="name1" />
+                <label htmlFor="name1">Nume 1</label>
+            </span>
+        </div>
+
+        <div class="field col-12">
+            <span class="p-float-label">
+                <input pInputText id="name2" placeholder="Nume 2" formControlName="name2" />
+                <label htmlFor="name2">Nume 2</label>
+            </span>
+        </div>
+
+        <div class="field col-12">
+            <span class="p-float-label">
+                <input pInputText id="name3" placeholder="Nume 3" formControlName="name3" />
+                <label htmlFor="name3">Nume 3</label>
+            </span>
+        </div>
+
+        <div class="grid grid-nogutter justify-content-between">
+            <p-button label="Back" (onClick)="previewPage()" icon="pi pi-angle-left" iconPos="left"></p-button>
+        </div>
+        <div class="grid grid-nogutter justify-content-end">
+            <p-button label="Next" (onClick)="nextPage()" icon="pi pi-angle-right" iconPos="right"></p-button>
+        </div>
+
+    </div>
+</form>

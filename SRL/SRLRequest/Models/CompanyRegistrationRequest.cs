@@ -11,6 +11,8 @@ namespace IT.DigitalCompany.Models
         public ICollection<Person> Associates { get; set; } = new List<Person>();
 
         public ICollection<CompanyLocation> Locations { get; set; } = new List<CompanyLocation>();
+
+        public CompanyNames Names { get; set; } = new CompanyNames();
         [NotMapped]
         [System.Text.Json.Serialization.JsonIgnore]
         [Newtonsoft.Json.JsonIgnore]

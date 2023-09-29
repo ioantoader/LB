@@ -27,9 +27,7 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
               private _route: ActivatedRoute
   ) {
     this._companyRequestService.companyRequest$.subscribe(r => {
-      if (r) {
-        this.locations = [...(r.locations ?? [])];
-      }
+        this.locations = [...(r?.locations ?? [])];
     });
   }
 
@@ -135,6 +133,6 @@ export class CompanyLocationsComponent implements OnInit, OnDestroy {
   }
 
   public nextPage() {
-
+    this._companyRequestService.gotoCompanyActivities(this._router, this._route);
   }
 }

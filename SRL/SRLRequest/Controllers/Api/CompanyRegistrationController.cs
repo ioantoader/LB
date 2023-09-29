@@ -54,6 +54,42 @@ namespace IT.DigitalCompany.Controllers.Api
             return registationRequest;
         }
 
+
+        [Authorize()]
+        [HttpPut("requests/{companyRequestId}/Names")]
+        public async Task<ActionResult<CompanyRegistrationRequest>> PutNames([FromRoute] Guid companyRequestId,
+                CompanyNames names)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var registationRequest = await this._companyRegistrationManager.FindCompanyRegistrationRequestAsync(companyRequestId,
+                includeAssociates: true,
+                includeAssociateAddress: true,
+                includeLocations: true,
+                includeLocationAddress: true,
+                includeLocationOwners: true,
+                includeLocationOwnerAddress: true)
+                .ConfigureAwait(false);
+            if (null == registationRequest)
+            {
+                return NotFound();
+            }
+
+            var subjectId = User.GetSubjectId();
+            if (!String.Equals(registationRequest.UserId, subjectId, StringComparison.OrdinalIgnoreCase))
+            {
+                return Forbid();
+            }
+
+            await this._companyRegistrationManager.UpdateRegistrationRequestNamesAsync(registationRequest, names)
+                .ConfigureAwait(false);
+            return registationRequest;
+        }
+
+
         [Authorize()]
         [HttpPost("requests/{companyRequestId}/associates")]
         public async Task<ActionResult<Person>> PostAssociate([FromRoute] Guid companyRequestId,
