@@ -8,6 +8,7 @@ import { CLIENT_MENU_PROVIDER } from './service/client.menu.service';
 import { DATA_PROVIDER } from '../shared/services/data.service';
 import { PrimengModule } from 'src/app/shared/modules/primeng.module';
 import { CompanyRequestComponent } from './components/company-request/company-request.component';
+import { RequestsComponent } from './components/requests/requests.component';
 
 @NgModule({
   imports: [
@@ -23,6 +24,9 @@ import { CompanyRequestComponent } from './components/company-request/company-re
     CLIENT_MENU_PROVIDER,
     DATA_PROVIDER
   ],
-  declarations: [ClientLayoutComponent, CompanyRequestComponent]
+  declarations: [ClientLayoutComponent,
+    CompanyRequestComponent,
+    RequestsComponent
+  ]
 })
 export class ClientModule { }
